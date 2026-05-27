@@ -9,177 +9,296 @@
 <style>
 *{box-sizing:border-box;margin:0;padding:0}
 body{font-family:'PingFang SC','Microsoft YaHei',sans-serif;background:#f5f6fa;color:#1a1a2e;font-size:13px}
-.header{background:#fff;border-bottom:1px solid #e8eaed;padding:14px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
-.header-left .title{font-size:17px;font-weight:600;color:#1a1a2e}
-.header-left .subtitle{font-size:12px;color:#6b7280;margin-top:2px}
+
+/* 登录 */
+.login-screen{position:fixed;inset:0;background:linear-gradient(135deg,#1677ff,#0050d0);display:flex;align-items:center;justify-content:center;z-index:9999}
+.login-box{background:#fff;border-radius:20px;padding:2.5rem 2rem;width:340px;box-shadow:0 20px 60px rgba(0,0,0,.2)}
+.login-logo{font-size:36px;text-align:center;margin-bottom:12px}
+.login-title{font-size:17px;font-weight:700;text-align:center;margin-bottom:4px}
+.login-sub{font-size:12px;color:#9ca3af;text-align:center;margin-bottom:24px}
+.login-label{font-size:12px;color:#374151;margin-bottom:6px;font-weight:500}
+.login-input{width:100%;padding:10px 14px;border:1.5px solid #e5e7eb;border-radius:10px;font-size:14px;outline:none;transition:border-color .2s;margin-bottom:16px}
+.login-input:focus{border-color:#1677ff}
+.login-btn{width:100%;padding:11px;background:#1677ff;color:#fff;border:none;border-radius:10px;font-size:14px;font-weight:600;cursor:pointer}
+.login-btn:hover{background:#0050d0}
+.login-err{font-size:12px;color:#ef4444;text-align:center;margin-top:10px;min-height:18px}
+.hidden{display:none!important}
+
+/* 全局布局 */
+.header{background:#fff;border-bottom:1px solid #e8eaed;padding:12px 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100}
+.header-left .title{font-size:16px;font-weight:600}
+.header-left .subtitle{font-size:11px;color:#6b7280;margin-top:2px}
 .header-right{display:flex;gap:8px;align-items:center}
-.main{max-width:1400px;margin:0 auto;padding:20px 24px}
-.tab-row{display:flex;gap:4px;margin-bottom:20px;background:#fff;padding:6px;border-radius:10px;width:fit-content;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.tab{font-size:12px;padding:5px 14px;border-radius:7px;cursor:pointer;border:none;background:transparent;color:#6b7280;font-weight:500}
+.main{max-width:1440px;margin:0 auto;padding:18px 24px}
+
+/* 标签 */
+.tab-row{display:flex;gap:3px;margin-bottom:18px;background:#fff;padding:5px;border-radius:10px;width:fit-content;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.tab{font-size:12px;padding:5px 13px;border-radius:7px;cursor:pointer;border:none;background:transparent;color:#6b7280;font-weight:500;white-space:nowrap}
 .tab.active{background:#1677ff;color:#fff}
 .panel{display:none}.panel.active{display:block}
-.upload-zone{border:2px dashed #d1d5db;border-radius:14px;padding:2.5rem;text-align:center;cursor:pointer;transition:all .2s;background:#fff;margin-bottom:20px}
+
+/* 上传 */
+.upload-zone{border:2px dashed #d1d5db;border-radius:14px;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;background:#fff;margin-bottom:18px}
 .upload-zone:hover,.upload-zone.drag{border-color:#1677ff;background:#f0f7ff}
-.upload-icon{font-size:40px;margin-bottom:12px}
-.upload-title{font-size:15px;font-weight:600;margin-bottom:6px;color:#1a1a2e}
-.upload-sub{font-size:12px;color:#9ca3af;line-height:1.6}
-.upload-status{font-size:12px;margin-top:12px;padding:8px 14px;border-radius:8px;display:none}
+.upload-status{font-size:12px;margin-top:10px;padding:7px 14px;border-radius:8px;display:none}
 .status-ok{background:#f0fdf4;color:#16a34a;border:1px solid #bbf7d0}
 .status-err{background:#fef2f2;color:#dc2626;border:1px solid #fecaca}
 .status-loading{background:#fffbeb;color:#d97706;border:1px solid #fde68a}
-.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
-.kpi{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.kpi-label{font-size:11px;color:#9ca3af;margin-bottom:4px;display:flex;align-items:center;gap:4px}
-.kpi-val{font-size:20px;font-weight:600;color:#1a1a2e}
-.kpi-sub{font-size:11px;color:#9ca3af;margin-top:4px}
-.badge-auto{font-size:10px;padding:1px 5px;border-radius:3px;background:#eff6ff;color:#3b82f6}
+
+/* KPI */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:16px}
+.kpi{background:#fff;border-radius:12px;padding:12px 15px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.kpi-label{font-size:11px;color:#9ca3af;margin-bottom:3px}
+.kpi-val{font-size:19px;font-weight:600}
 .up{color:#16a34a}.down{color:#dc2626}
-.card{background:#fff;border-radius:12px;padding:16px 20px;margin-bottom:16px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.card-title{font-size:13px;font-weight:600;color:#374151;margin-bottom:14px;display:flex;align-items:center;justify-content:space-between}
-.ws-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:16px}
-.ws-card{background:#fff;border-radius:12px;padding:14px 16px;box-shadow:0 1px 3px rgba(0,0,0,.06);border-left:3px solid #e5e7eb}
+
+/* 卡片 */
+.card{background:#fff;border-radius:12px;padding:15px 18px;margin-bottom:14px;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.card-title{font-size:12px;font-weight:600;color:#374151;margin-bottom:12px;display:flex;align-items:center;justify-content:space-between}
+
+/* 图表容器 — 带展开按钮 */
+.chart-wrap{position:relative}
+.chart-expand{position:absolute;top:0;right:0;font-size:11px;padding:3px 9px;border-radius:6px;border:1px solid #e5e7eb;background:#fff;color:#6b7280;cursor:pointer;z-index:2}
+.chart-expand:hover{background:#f0f7ff;color:#1677ff;border-color:#1677ff}
+
+/* 全屏图表弹层 */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:8000;display:flex;flex-direction:column;align-items:center;justify-content:center}
+.modal-box{background:#fff;border-radius:16px;padding:24px;width:92vw;height:86vh;display:flex;flex-direction:column;box-shadow:0 24px 80px rgba(0,0,0,.3)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.modal-title{font-size:15px;font-weight:600;color:#1a1a2e}
+.modal-close{font-size:22px;color:#9ca3af;cursor:pointer;line-height:1;border:none;background:none;padding:0 4px}
+.modal-close:hover{color:#1a1a2e}
+.modal-body{flex:1;position:relative;min-height:0}
+
+/* 车间看板 */
+.ws-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.ws-card{background:#fff;border-radius:12px;padding:13px 15px;box-shadow:0 1px 3px rgba(0,0,0,.06);border-left:3px solid #e5e7eb;cursor:pointer;transition:box-shadow .15s}
+.ws-card:hover{box-shadow:0 4px 12px rgba(0,0,0,.1)}
 .ws-card.prod{border-left-color:#1677ff}
 .ws-card.cost-only{border-left-color:#f59e0b}
-.ws-name{font-size:13px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between}
-.ws-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.ws-name{font-size:13px;font-weight:600;margin-bottom:9px;display:flex;align-items:center;justify-content:space-between}
+.ws-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
 .ws-m-label{font-size:10px;color:#9ca3af}
-.ws-m-val{font-size:12px;font-weight:600;color:#374151;margin-top:2px}
-.pill{font-size:10px;padding:2px 8px;border-radius:10px;display:inline-block;font-weight:500}
+.ws-m-val{font-size:12px;font-weight:600;color:#374151;margin-top:1px}
+.pill{font-size:10px;padding:2px 8px;border-radius:10px;font-weight:500}
 .pill-ok{background:#f0fdf4;color:#16a34a}
 .pill-warn{background:#fffbeb;color:#d97706}
 .pill-bad{background:#fef2f2;color:#dc2626}
+
+/* 车间详情弹层 */
+.ws-modal{position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:7000;display:flex;align-items:center;justify-content:center}
+.ws-modal-box{background:#f5f6fa;border-radius:16px;width:88vw;max-height:90vh;overflow-y:auto;padding:20px 24px;box-shadow:0 24px 80px rgba(0,0,0,.25)}
+.ws-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px}
+.ws-modal-title{font-size:16px;font-weight:700}
+
+/* 对比页 */
+.ws-sel-row{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:14px}
+.ws-sel-btn{font-size:11px;padding:4px 11px;border-radius:6px;cursor:pointer;border:1px solid #e5e7eb;background:#fff;color:#6b7280}
+.ws-sel-btn.active{background:#1677ff;color:#fff;border-color:#1677ff}
+
+/* 表格 */
 .tbl{width:100%;border-collapse:collapse;font-size:11px}
-.tbl th{text-align:right;padding:6px 8px;color:#9ca3af;font-weight:500;border-bottom:1px solid #f3f4f6;white-space:nowrap;background:#fafafa}
+.tbl th{text-align:right;padding:6px 7px;color:#9ca3af;font-weight:500;border-bottom:1px solid #f3f4f6;white-space:nowrap;background:#fafafa}
 .tbl th:first-child,.tbl td:first-child{text-align:left}
-.tbl td{padding:7px 8px;border-bottom:1px solid #f3f4f6;text-align:right;color:#374151}
+.tbl td{padding:6px 7px;border-bottom:1px solid #f3f4f6;text-align:right;color:#374151}
 .tbl td:first-child{font-weight:600;white-space:nowrap}
 .tbl tr:hover td{background:#f9fafb}
 .tbl tr.tot td{font-weight:700;border-top:2px solid #e5e7eb;background:#fafafa}
 .bar-bg{height:5px;background:#f3f4f6;border-radius:3px;margin-top:5px}
 .bar-fill{height:5px;border-radius:3px}
-.month-sel,.file-btn{font-size:12px;padding:6px 12px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#374151;cursor:pointer}
-.file-btn{background:#1677ff;color:#fff;border-color:#1677ff;cursor:pointer}
-.no-data{text-align:center;padding:3rem;color:#9ca3af;font-size:13px}
-.charts-row{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:16px;margin-bottom:16px}
-select{outline:none}
-@media(max-width:768px){
-  .kpi-grid{grid-template-columns:repeat(2,1fr)}
-  .ws-grid{grid-template-columns:1fr}
-  .charts-row{grid-template-columns:1fr}
-  .main{padding:12px 14px}
-}
+.charts-row{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.ctrl-btn{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid #e5e7eb;background:#fff;color:#374151;cursor:pointer}
+.ctrl-btn.primary{background:#1677ff;color:#fff;border-color:#1677ff}
+.ctrl-btn.danger{color:#ef4444;border-color:#fecaca}
+.no-data{text-align:center;padding:3rem;color:#9ca3af}
+select{outline:none;font-size:12px;padding:5px 10px;border-radius:8px;border:1px solid #e5e7eb;background:#fff}
+@media(max-width:768px){.kpi-grid{grid-template-columns:repeat(2,1fr)}.ws-grid{grid-template-columns:1fr}.charts-row{grid-template-columns:1fr}.main{padding:12px}}
 </style>
 </head>
 <body>
 
-<div class="header">
-  <div class="header-left">
-    <div class="title">结构加工事业部 · 绩效看板</div>
-    <div class="subtitle" id="dataSourceLabel">请上传 Excel 文件以加载数据</div>
-  </div>
-  <div class="header-right">
-    <select class="month-sel" id="monthSel" onchange="onMonthChange()" style="display:none"></select>
-    <label class="file-btn">
-      📂 上传 Excel
-      <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this)">
-    </label>
+<!-- 登录 -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <div class="login-logo">📊</div>
+    <div class="login-title">结构加工事业部看板</div>
+    <div class="login-sub">请输入访问密码</div>
+    <div class="login-label">密码</div>
+    <input class="login-input" type="password" id="loginPwd" placeholder="请输入密码" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">进入看板</button>
+    <div class="login-err" id="loginErr"></div>
   </div>
 </div>
 
-<div class="main">
-  <!-- 上传区 -->
-  <div id="uploadZone" class="upload-zone"
-    onclick="document.getElementById('fileInput').click()"
-    ondragover="event.preventDefault();this.classList.add('drag')"
-    ondragleave="this.classList.remove('drag')"
-    ondrop="event.preventDefault();this.classList.remove('drag');handleDrop(event)">
-    <div class="upload-icon">📊</div>
-    <div class="upload-title">上传「事业部各车间成本.xlsx」</div>
-    <div class="upload-sub">点击选择文件，或将文件拖拽到此处<br>自动读取：成本各sheet · 利润表 · 劳率 · 节点完成率 · 流机节约 · 车间利用率</div>
-    <div id="uploadStatus" class="upload-status"></div>
+<!-- 全屏图表弹层 -->
+<div class="modal-overlay hidden" id="chartModal" onclick="closeChartModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title" id="modalTitle"></span>
+      <button class="modal-close" onclick="closeChartModal()">✕</button>
+    </div>
+    <div class="modal-body"><canvas id="modalCanvas"></canvas></div>
+  </div>
+</div>
+
+<!-- 车间详情弹层 -->
+<div class="ws-modal hidden" id="wsModal" onclick="closeWsModal(event)">
+  <div class="ws-modal-box" onclick="event.stopPropagation()">
+    <div class="ws-modal-header">
+      <span class="ws-modal-title" id="wsModalTitle"></span>
+      <button class="modal-close" onclick="closeWsModal()">✕</button>
+    </div>
+    <div id="wsModalBody"></div>
+  </div>
+</div>
+
+<!-- 主界面 -->
+<div id="appRoot" class="hidden">
+  <div class="header">
+    <div class="header-left">
+      <div class="title">结构加工事业部 · 绩效看板</div>
+      <div class="subtitle" id="dataSourceLabel">暂无数据</div>
+    </div>
+    <div class="header-right">
+      <select id="monthSel" onchange="onMonthChange()" style="display:none"></select>
+      <span id="adminTag" style="font-size:11px;background:#f0fdf4;color:#16a34a;padding:3px 10px;border-radius:6px;display:none">🔑 管理员</span>
+      <button class="ctrl-btn danger" onclick="doLogout()">退出</button>
+    </div>
   </div>
 
-  <div id="dashContent" style="display:none">
+  <div class="main">
+    <!-- 管理员上传区 -->
+    <div id="adminBar" class="hidden">
+      <div class="upload-zone" onclick="document.getElementById('fileInput').click()"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="event.preventDefault();this.classList.remove('drag');handleDrop(event)">
+        <div style="font-size:32px;margin-bottom:8px">📂</div>
+        <div style="font-size:14px;font-weight:600;margin-bottom:4px">上传「事业部各车间成本.xlsx」</div>
+        <div style="font-size:12px;color:#9ca3af">点击选择或拖拽文件 · 上传后自动保存，所有用户可见</div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this)">
+        <div id="uploadStatus" class="upload-status"></div>
+      </div>
+    </div>
+
+    <!-- 标签页 -->
     <div class="tab-row">
-      <button class="tab active" onclick="showTab('overview',this)">📋 总览</button>
+      <button class="tab active" onclick="showTab('overview',this)">📋 部门总览</button>
+      <button class="tab" onclick="showTab('workshop',this)">🏭 各车间看板</button>
+      <button class="tab" onclick="showTab('compare',this)">📊 车间对比</button>
       <button class="tab" onclick="showTab('cost',this)">💰 成本明细</button>
       <button class="tab" onclick="showTab('profit',this)">📈 利润分析</button>
       <button class="tab" onclick="showTab('efficiency',this)">⚡ 效率指标</button>
       <button class="tab" onclick="showTab('machine',this)">🔧 流机管控</button>
     </div>
 
-    <div class="panel active" id="panel-overview"></div>
-    <div class="panel" id="panel-cost"></div>
-    <div class="panel" id="panel-profit"></div>
-    <div class="panel" id="panel-efficiency"></div>
-    <div class="panel" id="panel-machine"></div>
+    <div class="panel active" id="panel-overview"><div class="no-data">暂无数据</div></div>
+    <div class="panel" id="panel-workshop"><div class="no-data">暂无数据</div></div>
+    <div class="panel" id="panel-compare"><div class="no-data">暂无数据</div></div>
+    <div class="panel" id="panel-cost"><div class="no-data">暂无数据</div></div>
+    <div class="panel" id="panel-profit"><div class="no-data">暂无数据</div></div>
+    <div class="panel" id="panel-efficiency"><div class="no-data">暂无数据</div></div>
+    <div class="panel" id="panel-machine"><div class="no-data">暂无数据</div></div>
   </div>
 </div>
 
 <script>
-const COST_SHEETS=['冷加工','小件配套','外膛','金工','数控预处理','结构预制','工艺准备','综合室','本部','检验室'];
-const WS_MAP={'冷加工':'冷加工车间','小件配套':'小件配套车间','外膛':'外镗车间','金工':'金工车间','数控预处理':'数控预处理车间','结构预制':'结构预制车间','工艺准备':'工艺准备室','综合室':'综合室','本部':'本部','检验室':'检验室'};
-const COST_ITEMS=['一线本工（承包）','一线本工（非承包）','电费','气体费','辅料','固定人员薪酬','基建修理费','设备修理费','维修材料','差旅交通','分包劳务','折旧费','安全生产费'];
-const SPREAD_ITEMS=COST_ITEMS.filter(c=>!c.startsWith('一线'));
-let DB={};let availableMonths=[];let curMonthIdx=0;let charts={};
+// ══ 密码配置 ══════════════════════════════════
+const VIEWER_PWD = 'view2026';
+const ADMIN_PWD  = 'admin2026';
+// ══════════════════════════════════════════════
+const STORAGE_KEY = 'dept_db_v2';
+const COST_SHEETS = ['冷加工','小件配套','外膛','金工','数控预处理','结构预制','工艺准备','综合室','本部','检验室'];
+const WS_MAP = {'冷加工':'冷加工车间','小件配套':'小件配套车间','外膛':'外镗车间','金工':'金工车间','数控预处理':'数控预处理车间','结构预制':'结构预制车间','工艺准备':'工艺准备室','综合室':'综合室','本部':'本部','检验室':'检验室'};
+const COST_ITEMS = ['一线本工（承包）','一线本工（非承包）','电费','气体费','辅料','固定人员薪酬','基建修理费','设备修理费','维修材料','差旅交通','分包劳务','折旧费','安全生产费'];
+const SPREAD_ITEMS = COST_ITEMS.filter(c=>!c.startsWith('一线'));
+const COLORS = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4','#f97316','#84cc16','#14b8a6'];
 
-function handleFile(input){if(input.files[0])parseExcel(input.files[0]);}
+let DB={}, availableMonths=[], curMonthIdx=0, isAdmin=false, charts={}, modalChart=null;
+
+// ── 登录 ─────────────────────────────────────
+function doLogin(){
+  const p=document.getElementById('loginPwd').value.trim();
+  if(p===ADMIN_PWD){isAdmin=true;enterApp();}
+  else if(p===VIEWER_PWD){isAdmin=false;enterApp();}
+  else{document.getElementById('loginErr').textContent='密码错误';document.getElementById('loginPwd').value='';}
+}
+function enterApp(){
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appRoot').classList.remove('hidden');
+  if(isAdmin){document.getElementById('adminBar').classList.remove('hidden');document.getElementById('adminTag').style.display='inline';}
+  loadSavedData();
+}
+function doLogout(){
+  isAdmin=false;
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('appRoot').classList.add('hidden');
+  document.getElementById('loginPwd').value='';
+  document.getElementById('loginErr').textContent='';
+  document.getElementById('adminTag').style.display='none';
+  document.getElementById('adminBar').classList.add('hidden');
+}
+
+// ── 持久化 ───────────────────────────────────
+function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({DB,availableMonths,savedAt:new Date().toLocaleString('zh-CN')}));return true;}catch(e){return false;}}
+function loadSavedData(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;
+    const s=JSON.parse(raw);DB=s.DB||{};availableMonths=s.availableMonths||[];
+    if(availableMonths.length){
+      curMonthIdx=availableMonths[availableMonths.length-1];
+      initMonthSel();
+      document.getElementById('dataSourceLabel').textContent=`数据已加载 · ${availableMonths.length}个月 · 更新：${s.savedAt||''}`;
+      showTab('overview',document.querySelector('.tab'));
+    }
+  }catch(e){console.warn(e);}
+}
+
+// ── 文件解析 ─────────────────────────────────
+function handleFile(i){if(i.files[0])parseExcel(i.files[0]);}
 function handleDrop(e){if(e.dataTransfer.files[0])parseExcel(e.dataTransfer.files[0]);}
 function setStatus(msg,type){const el=document.getElementById('uploadStatus');el.textContent=msg;el.className='upload-status status-'+type;el.style.display='block';}
+function isMonthCol(v){return v instanceof Date;}
 
 async function parseExcel(file){
-  setStatus('⏳ 正在解析文件...','loading');
+  setStatus('⏳ 解析中...','loading');
   try{
     const buf=await file.arrayBuffer();
     const wb=XLSX.read(buf,{type:'array',cellDates:true});
     DB={costs:{},profit:{},labor:{},nodes:{},machine:{},utilization:{}};
 
-    // 成本sheets
     COST_SHEETS.forEach(sn=>{
       if(!wb.SheetNames.includes(sn))return;
       const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:null});
-      const header=rows[0]||[];
-      const mCols={};
-      header.forEach((v,i)=>{if(v instanceof Date)mCols[i]=v.getMonth();});
+      const header=rows[0]||[];const mCols={};
+      header.forEach((v,i)=>{if(isMonthCol(v))mCols[i]=v.getMonth();});
       const wsData={};
-      let lastCat='';
       rows.slice(1).forEach(row=>{
-        if(row[0])lastCat=row[0];
         const item=row[1];if(!item)return;
-        Object.entries(mCols).forEach(([ci,mi])=>{
-          wsData[mi]=wsData[mi]||{};
-          wsData[mi][item]=(wsData[mi][item]||0)+(parseFloat(row[ci])||0);
-        });
+        Object.entries(mCols).forEach(([ci,mi])=>{wsData[mi]=wsData[mi]||{};wsData[mi][item]=(wsData[mi][item]||0)+(parseFloat(row[ci])||0);});
       });
       DB.costs[sn]=wsData;
     });
 
-    // 利润表
     if(wb.SheetNames.includes('利润表')){
       const rows=XLSX.utils.sheet_to_json(wb.Sheets['利润表'],{header:1,defval:null});
-      const header=rows[0]||[];
-      const mCols={};
-      header.forEach((v,i)=>{if(v instanceof Date)mCols[i]=v.getMonth();});
+      const header=rows[0]||[];const mCols={};
+      header.forEach((v,i)=>{if(isMonthCol(v))mCols[i]=v.getMonth();});
       let curWs='';
       rows.slice(1).forEach(row=>{
         if(row[0]&&typeof row[0]==='string'&&row[0].trim())curWs=row[0].trim();
         const item=row[1];if(!item||!curWs)return;
         DB.profit[curWs]=DB.profit[curWs]||{};
-        Object.entries(mCols).forEach(([ci,mi])=>{
-          DB.profit[curWs][mi]=DB.profit[curWs][mi]||{};
-          DB.profit[curWs][mi][item]=parseFloat(row[ci])||0;
-        });
+        Object.entries(mCols).forEach(([ci,mi])=>{DB.profit[curWs][mi]=DB.profit[curWs][mi]||{};DB.profit[curWs][mi][item]=parseFloat(row[ci])||0;});
       });
     }
 
-    // 劳率
     if(wb.SheetNames.includes('劳率')){
       const rows=XLSX.utils.sheet_to_json(wb.Sheets['劳率'],{header:1,defval:null});
-      const header=rows[0]||[];
-      const mCols={};
+      const header=rows[0]||[];const mCols={};
       header.forEach((v,i)=>{
         if(typeof v==='number'&&v>40000){const d=XLSX.SSF.parse_date_code(v);mCols[i]=d.m-1;}
-        else if(v instanceof Date)mCols[i]=v.getMonth();
+        else if(isMonthCol(v))mCols[i]=v.getMonth();
       });
       let cat='';
       rows.slice(1).forEach(row=>{
@@ -195,11 +314,9 @@ async function parseExcel(file){
       });
     }
 
-    // 节点完成率
     if(wb.SheetNames.includes('关键节点完成率')){
       const rows=XLSX.utils.sheet_to_json(wb.Sheets['关键节点完成率'],{header:1,defval:null});
-      const header=rows[0]||[];
-      const mCols={};
+      const header=rows[0]||[];const mCols={};
       ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'].forEach((m,i)=>{const ci=header.indexOf(m);if(ci>0)mCols[ci]=i;});
       let curWs='';
       rows.slice(1).forEach(row=>{
@@ -215,14 +332,12 @@ async function parseExcel(file){
       });
     }
 
-    // 流机节约
     if(wb.SheetNames.includes('流机节约')){
       const rows=XLSX.utils.sheet_to_json(wb.Sheets['流机节约'],{header:1,defval:null});
-      const header=rows[0]||[];
-      const mCols={};
+      const header=rows[0]||[];const mCols={};
       header.forEach((v,i)=>{
         if(typeof v==='number'&&v>40000){const d=XLSX.SSF.parse_date_code(v);mCols[i]=d.m-1;}
-        else if(v instanceof Date)mCols[i]=v.getMonth();
+        else if(isMonthCol(v))mCols[i]=v.getMonth();
       });
       let cat='';
       rows.slice(1).forEach(row=>{
@@ -239,11 +354,9 @@ async function parseExcel(file){
       });
     }
 
-    // 车间利用率
     if(wb.SheetNames.includes('车间利用率')){
       const rows=XLSX.utils.sheet_to_json(wb.Sheets['车间利用率'],{header:1,defval:null});
-      const header=rows[0]||[];
-      const mCols={};
+      const header=rows[0]||[];const mCols={};
       ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'].forEach((m,i)=>{const ci=header.indexOf(m);if(ci>=0)mCols[ci]=i;});
       let curWs='';
       rows.slice(1).forEach(row=>{
@@ -259,80 +372,154 @@ async function parseExcel(file){
       });
     }
 
-    const costMonths=new Set();
-    Object.values(DB.costs).forEach(ws=>Object.keys(ws).forEach(m=>costMonths.add(parseInt(m))));
-    availableMonths=[...costMonths].sort((a,b)=>a-b).filter(m=>m>=0&&m<12);
+    const cm=new Set();
+    Object.values(DB.costs).forEach(ws=>Object.keys(ws).forEach(m=>cm.add(parseInt(m))));
+    availableMonths=[...cm].sort((a,b)=>a-b).filter(m=>m>=0&&m<12);
     curMonthIdx=availableMonths[availableMonths.length-1]||0;
-
-    const mSel=document.getElementById('monthSel');
-    mSel.innerHTML=availableMonths.map(m=>`<option value="${m}"${m===curMonthIdx?' selected':''}>${m+1}月</option>`).join('');
-    mSel.style.display='block';
-    document.getElementById('uploadZone').style.display='none';
-    document.getElementById('dashContent').style.display='block';
-    document.getElementById('dataSourceLabel').textContent=`${file.name} · 已加载 ${availableMonths.length} 个月数据`;
-    setStatus(`✓ 成功解析 ${COST_SHEETS.filter(s=>DB.costs[s]).length} 个车间，${availableMonths.length} 个月份`,'ok');
+    const ok=saveData();
+    initMonthSel();
+    document.getElementById('dataSourceLabel').textContent=`${file.name} · ${availableMonths.length}个月 · ${new Date().toLocaleString('zh-CN')}`;
+    setStatus(`✓ 解析成功 · ${availableMonths.length}个月${ok?' · 已保存':''}`,'ok');
     showTab('overview',document.querySelector('.tab'));
   }catch(e){setStatus('❌ 解析失败：'+e.message,'err');console.error(e);}
 }
 
-const W=(v,u='',d=1)=>v==null||isNaN(v)?'—':(Math.abs(v)<0.001?'0':v.toFixed(Math.abs(v%1)<0.0001?0:d))+u;
-const WY=(v)=>v==null||isNaN(v)?'—':(Math.abs(v)>=10000?W(v/10000,'万'):Math.abs(v)>=1000?W(v/1000,'千'):W(v));
+function initMonthSel(){
+  const s=document.getElementById('monthSel');
+  s.innerHTML=availableMonths.map(m=>`<option value="${m}"${m===curMonthIdx?' selected':''}>${m+1}月</option>`).join('');
+  s.style.display='block';
+}
 
+// ── 工具 ─────────────────────────────────────
+const W=(v,u='',d=1)=>v==null||isNaN(v)?'—':(v.toFixed(Math.abs(v%1)<0.0001?0:d))+u;
+const WY=(v)=>v==null||isNaN(v)?'—':(Math.abs(v)>=10000?W(v/10000,'万'):Math.abs(v)>=1000?W(v/1000,'千'):W(v));
 function getWsCost(sn,mi){
   const mo=(DB.costs[sn]||{})[mi]||{};
   const line=(mo['一线本工（承包）']||0)+(mo['一线本工（非承包）']||0);
   const spread=SPREAD_ITEMS.reduce((s,c)=>s+(mo[c]||0),0);
   return{line,spread,total:line+spread,items:mo};
 }
+function nodeKey(sn){return sn.replace('数控预处理','数控').replace('结构预制','预制').replace('小件配套','小件').replace('工艺准备','工艺').replace('外膛','外镗');}
 
+// ── 全屏图表弹层 ──────────────────────────────
+function openChartModal(title, chartFn){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('chartModal').classList.remove('hidden');
+  if(modalChart){modalChart.destroy();modalChart=null;}
+  setTimeout(()=>{modalChart=chartFn(document.getElementById('modalCanvas'));},30);
+}
+function closeChartModal(e){
+  if(e&&e.target!==document.getElementById('chartModal'))return;
+  document.getElementById('chartModal').classList.add('hidden');
+  if(modalChart){modalChart.destroy();modalChart=null;}
+}
+
+function expandBtn(title, chartFn){
+  return `<button class="chart-expand" onclick="openChartModal('${title}',${chartFn})">⛶ 全屏</button>`;
+}
+
+// 图表工厂函数（字符串形式传入modal）
+function makeTrendChart(canvas){
+  const lineCosts=availableMonths.map(m=>{let s=0;COST_SHEETS.forEach(sn=>s+=getWsCost(sn,m).line);return s/10000;});
+  const spreadCosts=availableMonths.map(m=>{let s=0;COST_SHEETS.forEach(sn=>s+=getWsCost(sn,m).spread);return s/10000;});
+  return new Chart(canvas,{type:'bar',data:{labels:availableMonths.map(m=>m+1+'月'),datasets:[{label:'一线工工资',data:lineCosts,backgroundColor:'#f87171',borderRadius:4},{label:'分摊成本',data:spreadCosts,backgroundColor:'#60a5fa',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:13},boxWidth:12}}},scales:{x:{stacked:true,ticks:{font:{size:12}}},y:{stacked:true,ticks:{font:{size:12}}}}}});
+}
+function makePieChart(canvas){
+  const mi=curMonthIdx;const itemTotals={};
+  SPREAD_ITEMS.forEach(c=>{let s=0;COST_SHEETS.forEach(sn=>s+=((DB.costs[sn]||{})[mi]||{})[c]||0);if(s>0)itemTotals[c]=s;});
+  const colors=['#60a5fa','#f87171','#34d399','#fbbf24','#a78bfa','#f472b6','#2dd4bf','#fb923c','#818cf8','#4ade80','#e879f9','#94a3b8'];
+  return new Chart(canvas,{type:'doughnut',data:{labels:Object.keys(itemTotals),datasets:[{data:Object.values(itemTotals),backgroundColor:colors,borderWidth:0}]},options:{responsive:true,maintainAspectRatio:false,cutout:'50%',plugins:{legend:{position:'right',labels:{font:{size:13},padding:10,boxWidth:12}}}}});
+}
+function makeProfitChart(canvas){
+  const keys=Object.keys(DB.profit).slice(0,8);
+  const datasets=keys.map((k,i)=>({label:k,data:availableMonths.map(m=>(((DB.profit[k]||{})[m]||{})['总利润'])||0),borderColor:COLORS[i%COLORS.length],backgroundColor:'transparent',tension:0.3,pointRadius:4,borderWidth:2}));
+  return new Chart(canvas,{type:'line',data:{labels:availableMonths.map(m=>m+1+'月'),datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:13},boxWidth:12}}},scales:{x:{ticks:{font:{size:12}}},y:{ticks:{font:{size:12}}}}}});
+}
+function makeMachineChart(canvas){
+  const keys=Object.keys(DB.machine).filter(k=>k!=='合计');
+  const datasets=keys.map((k,i)=>({label:k,data:availableMonths.map(m=>((DB.machine[k]||{})[m]||{}).actual||0),borderColor:COLORS[i%COLORS.length],backgroundColor:'transparent',tension:0.3,pointRadius:4,borderWidth:2}));
+  return new Chart(canvas,{type:'line',data:{labels:availableMonths.map(m=>m+1+'月'),datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:13},boxWidth:12}}},scales:{x:{ticks:{font:{size:12}}},y:{ticks:{font:{size:12}}}}}});
+}
+function makeCompareOutputChart(canvas){
+  const mi=curMonthIdx;
+  const labels=COST_SHEETS.filter(s=>!['综合室','本部'].includes(s)).map(s=>WS_MAP[s]||s);
+  const sns=COST_SHEETS.filter(s=>!['综合室','本部'].includes(s));
+  const outs=sns.map(sn=>(((DB.profit[sn]||{})[mi]||{})['产值（总）']||0)/10000);
+  const profs=sns.map(sn=>(((DB.profit[sn]||{})[mi]||{})['总利润'])||0);
+  return new Chart(canvas,{type:'bar',data:{labels,datasets:[{label:'总产值（万）',data:outs,backgroundColor:'#60a5fa',borderRadius:4},{label:'利润（万）',data:profs,backgroundColor:'#34d399',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:13},boxWidth:12}}},scales:{x:{ticks:{font:{size:11}}},y:{ticks:{font:{size:12}}}}}});
+}
+function makeCompareCostChart(canvas){
+  const mi=curMonthIdx;
+  const sns=COST_SHEETS;
+  const labels=sns.map(s=>WS_MAP[s]||s);
+  const lines=sns.map(sn=>getWsCost(sn,mi).line/10000);
+  const spreads=sns.map(sn=>getWsCost(sn,mi).spread/10000);
+  return new Chart(canvas,{type:'bar',data:{labels,datasets:[{label:'一线工工资（万）',data:lines,backgroundColor:'#f87171',borderRadius:4},{label:'分摊成本（万）',data:spreads,backgroundColor:'#60a5fa',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:13},boxWidth:12}}},scales:{x:{stacked:true,ticks:{font:{size:11}}},y:{stacked:true,ticks:{font:{size:12}}}}}});
+}
+function makeNodeChart(canvas){
+  const mi=curMonthIdx;
+  const entries=Object.entries(DB.nodes).map(([nm,d])=>({nm,r:(d[mi]||{}).node_rate})).filter(x=>x.r&&x.r<2).sort((a,b)=>b.r-a.r);
+  return new Chart(canvas,{type:'bar',data:{labels:entries.map(x=>x.nm),datasets:[{label:'节点完成率',data:entries.map(x=>+(x.r*100).toFixed(1)),backgroundColor:entries.map(x=>x.r>=0.95?'#34d399':x.r>=0.85?'#fbbf24':'#f87171'),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{max:100,ticks:{font:{size:12}}},y:{ticks:{font:{size:12}}}}}});
+}
+
+// ── 总览 ─────────────────────────────────────
 function renderOverview(){
   const mi=curMonthIdx;
-  let totOutput=0,totCost=0,totLine=0,totSpread=0;
+  let totOut=0,totCost=0,totLine=0,totSpread=0;
   COST_SHEETS.forEach(sn=>{const{line,spread}=getWsCost(sn,mi);totLine+=line;totSpread+=spread;totCost+=line+spread;});
-  Object.values(DB.profit).forEach(wd=>{totOutput+=((wd[mi]||{})['产值（总）']||0)/10000;});
-  let nodeSum=0,nodeCnt=0;
-  Object.values(DB.nodes).forEach(ws=>{const r=(ws[mi]||{}).node_rate;if(r&&r<2){nodeSum+=r;nodeCnt++;}});
-  const avgNode=nodeCnt?nodeSum/nodeCnt:null;
-  let hcSum=0;
-  Object.values(DB.labor).forEach(ws=>{hcSum+=((ws[mi]||{}).headcount||0);});
+  Object.values(DB.profit).forEach(wd=>{totOut+=((wd[mi]||{})['产值（总）']||0)/10000;});
+  let nSum=0,nCnt=0;Object.values(DB.nodes).forEach(ws=>{const r=(ws[mi]||{}).node_rate;if(r&&r<2){nSum+=r;nCnt++;}});
+  const avgNode=nCnt?nSum/nCnt:null;
+  let hcSum=0;Object.values(DB.labor).forEach(ws=>{hcSum+=((ws[mi]||{}).headcount||0);});
 
   let html=`<div class="kpi-grid">
-    <div class="kpi"><div class="kpi-label">部门总产值</div><div class="kpi-val">¥${W(totOutput,'万')}</div></div>
+    <div class="kpi"><div class="kpi-label">部门总产值</div><div class="kpi-val">¥${W(totOut,'万')}</div></div>
     <div class="kpi"><div class="kpi-label">部门总成本</div><div class="kpi-val">${WY(totCost)}</div></div>
     <div class="kpi"><div class="kpi-label">一线工工资合计</div><div class="kpi-val">${WY(totLine)}</div></div>
     <div class="kpi"><div class="kpi-label">分摊成本合计</div><div class="kpi-val">${WY(totSpread)}</div></div>
-  </div>
-  <div class="kpi-grid">
+  </div><div class="kpi-grid">
     <div class="kpi"><div class="kpi-label">平均节点完成率</div><div class="kpi-val">${avgNode!=null?W(avgNode*100,'%'):'—'}</div></div>
-    <div class="kpi"><div class="kpi-label">总人数</div><div class="kpi-val">${hcSum>0?hcSum+'人':'—'}</div></div>
+    <div class="kpi"><div class="kpi-label">总人数</div><div class="kpi-val">${hcSum||'—'}${hcSum?'人':''}</div></div>
     <div class="kpi"><div class="kpi-label">当前月份</div><div class="kpi-val">${mi+1}月</div></div>
-    <div class="kpi"><div class="kpi-label">已载入车间</div><div class="kpi-val">${COST_SHEETS.filter(s=>DB.costs[s]).length}个</div></div>
+    <div class="kpi"><div class="kpi-label">车间数量</div><div class="kpi-val">${COST_SHEETS.filter(s=>DB.costs[s]).length}个</div></div>
   </div>
   <div class="charts-row">
-    <div class="card" style="margin:0"><div class="card-title">各月成本趋势（万元）</div><div style="position:relative;height:160px"><canvas id="trendC"></canvas></div></div>
-    <div class="card" style="margin:0"><div class="card-title">本月分摊成本构成</div><div style="position:relative;height:160px"><canvas id="pieC"></canvas></div></div>
+    <div class="card" style="margin:0">
+      <div class="card-title">各月成本趋势
+        <button class="chart-expand" onclick="openChartModal('各月成本趋势',makeTrendChart)">⛶ 全屏</button>
+      </div>
+      <div class="chart-wrap"><div style="position:relative;height:150px"><canvas id="trendC"></canvas></div></div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-title">本月分摊成本构成
+        <button class="chart-expand" onclick="openChartModal('本月分摊成本构成',makePieChart)">⛶ 全屏</button>
+      </div>
+      <div class="chart-wrap"><div style="position:relative;height:150px"><canvas id="pieC"></canvas></div></div>
+    </div>
   </div>
-  <div style="height:16px"></div>
+  <div style="height:14px"></div>
   <div class="ws-grid">`;
 
   COST_SHEETS.forEach(sn=>{
     const{line,spread,total}=getWsCost(sn,mi);
     const pdata=(DB.profit[sn]||{})[mi]||{};
     const labor=(DB.labor[WS_MAP[sn]]||{})[mi]||{};
-    const nodeKey=sn.replace('数控预处理','数控').replace('结构预制','预制').replace('小件配套','小件').replace('工艺准备','工艺').replace('外膛','外镗');
-    const node=(DB.nodes[nodeKey]||{})[mi]||{};
-    const nr=node.node_rate;
-    const isCostOnly=['综合室','本部','检验室'].includes(sn);
-    html+=`<div class="ws-card ${isCostOnly?'cost-only':'prod'}">
+    const nd=(DB.nodes[nodeKey(sn)]||{})[mi]||{};
+    const nr=nd.node_rate;
+    const isCO=['综合室','本部','检验室'].includes(sn);
+    html+=`<div class="ws-card ${isCO?'cost-only':'prod'}" onclick="openWsModal('${sn}')">
       <div class="ws-name">${WS_MAP[sn]||sn}
-        ${nr&&nr<2?`<span class="pill ${nr>=0.95?'pill-ok':nr>=0.85?'pill-warn':'pill-bad'}">${W(nr*100,'%',0)}</span>`:''}
+        <span style="display:flex;align-items:center;gap:5px">
+          ${nr&&nr<2?`<span class="pill ${nr>=0.95?'pill-ok':nr>=0.85?'pill-warn':'pill-bad'}">${W(nr*100,'%',0)}</span>`:''}
+          <span style="font-size:10px;color:#9ca3af">点击查看详情 →</span>
+        </span>
       </div>
       <div class="ws-metrics">
         <div><div class="ws-m-label">一线工工资</div><div class="ws-m-val">${WY(line)}</div></div>
         <div><div class="ws-m-label">分摊成本</div><div class="ws-m-val">${WY(spread)}</div></div>
         <div><div class="ws-m-label">成本合计</div><div class="ws-m-val">${WY(total)}</div></div>
         ${pdata['产值（总）']?`<div><div class="ws-m-label">总产值</div><div class="ws-m-val">${W(pdata['产值（总）']/10000,'万')}</div></div>`:''}
-        ${pdata['总利润']?`<div><div class="ws-m-label">利润</div><div class="ws-m-val ${pdata['总利润']>=0?'up':'down'}">${W(pdata['总利润'],'万')}</div></div>`:''}
+        ${pdata['总利润']!=null?`<div><div class="ws-m-label">利润</div><div class="ws-m-val ${pdata['总利润']>=0?'up':'down'}">${W(pdata['总利润'],'万')}</div></div>`:''}
         ${labor.headcount?`<div><div class="ws-m-label">人数</div><div class="ws-m-val">${labor.headcount}人</div></div>`:''}
       </div>
     </div>`;
@@ -341,30 +528,220 @@ function renderOverview(){
   document.getElementById('panel-overview').innerHTML=html;
 
   setTimeout(()=>{
-    const totCosts=availableMonths.map(m=>{let s=0;COST_SHEETS.forEach(sn=>s+=getWsCost(sn,m).line);return s/10000;});
-    const spreadCosts=availableMonths.map(m=>{let s=0;COST_SHEETS.forEach(sn=>s+=getWsCost(sn,m).spread);return s/10000;});
-    if(charts.trend)charts.trend.destroy();
-    charts.trend=new Chart(document.getElementById('trendC'),{type:'bar',
-      data:{labels:availableMonths.map(m=>m+1+'月'),datasets:[
-        {label:'一线工工资',data:totCosts,backgroundColor:'#f87171',borderRadius:4},
-        {label:'分摊成本',data:spreadCosts,backgroundColor:'#60a5fa',borderRadius:4}
-      ]},
-      options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},boxWidth:10}}},scales:{x:{stacked:true,ticks:{font:{size:11}}},y:{stacked:true,ticks:{font:{size:11}}}}}
-    });
-    const itemTotals={};
-    SPREAD_ITEMS.forEach(c=>{let s=0;COST_SHEETS.forEach(sn=>s+=((DB.costs[sn]||{})[mi]||{})[c]||0);if(s>0)itemTotals[c]=s;});
-    const colors=['#60a5fa','#f87171','#34d399','#fbbf24','#a78bfa','#f472b6','#2dd4bf','#fb923c','#818cf8','#4ade80','#e879f9','#94a3b8'];
-    if(charts.pie)charts.pie.destroy();
-    charts.pie=new Chart(document.getElementById('pieC'),{type:'doughnut',
-      data:{labels:Object.keys(itemTotals),datasets:[{data:Object.values(itemTotals),backgroundColor:colors,borderWidth:0}]},
-      options:{responsive:true,maintainAspectRatio:false,cutout:'55%',plugins:{legend:{position:'right',labels:{font:{size:10},padding:5,boxWidth:8}}}}
-    });
-  },50);
+    if(charts.trend)charts.trend.destroy();charts.trend=makeTrendChart(document.getElementById('trendC'));
+    if(charts.pie)charts.pie.destroy();charts.pie=makePieChart(document.getElementById('pieC'));
+  },30);
 }
 
+// ── 车间详情弹层 ──────────────────────────────
+function openWsModal(sn){
+  const mi=curMonthIdx;
+  const name=WS_MAP[sn]||sn;
+  const{line,spread,total,items}=getWsCost(sn,mi);
+  const pdata=(DB.profit[sn]||{})[mi]||{};
+  const labor=(DB.labor[name]||{})[mi]||{};
+  const nd=(DB.nodes[nodeKey(sn)]||{})[mi]||{};
+  const mach=Object.entries(DB.machine).filter(([k])=>k!=='合计').find(([k])=>k.includes(sn.replace('外膛','外镗').replace('数控预处理','数控').replace('结构预制','结构').replace('小件配套','小件')));
+  const machData=mach?(mach[1][mi]||{}):null;
+
+  document.getElementById('wsModalTitle').textContent=`${name} · ${mi+1}月详情`;
+
+  // KPI行
+  let body=`<div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">总产值</div><div class="kpi-val">${pdata['产值（总）']?W(pdata['产值（总）']/10000,'万'):'—'}</div></div>
+    <div class="kpi"><div class="kpi-label">利润</div><div class="kpi-val ${(pdata['总利润']||0)>=0?'up':'down'}">${pdata['总利润']!=null?W(pdata['总利润'],'万'):'—'}</div></div>
+    <div class="kpi"><div class="kpi-label">成本合计</div><div class="kpi-val">${WY(total)}</div></div>
+    <div class="kpi"><div class="kpi-label">人数</div><div class="kpi-val">${labor.headcount||'—'}${labor.headcount?'人':''}</div></div>
+  </div>`;
+
+  // 产值拆分
+  if(pdata['产值（总）']){
+    body+=`<div class="card"><div class="card-title">产值构成（元）</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div class="kpi"><div class="kpi-label">一线工产值</div><div class="kpi-val" style="font-size:15px">${WY(pdata['一线本工产值']||0)}</div></div>
+      <div class="kpi"><div class="kpi-label">人工产值</div><div class="kpi-val" style="font-size:15px">${WY(pdata['人工产值']||0)}</div></div>
+      <div class="kpi"><div class="kpi-label">分摊产值</div><div class="kpi-val" style="font-size:15px">${WY(pdata['分摊产值']||0)}</div></div>
+    </div></div>`;
+  }
+
+  // 利润公式
+  if(pdata['总利润']!=null){
+    const lp=pdata['一线本工利润']||0;const sp=pdata['分摊利润']||0;
+    body+=`<div class="card"><div class="card-title">利润拆分</div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="kpi"><div class="kpi-label">一线工利润 = 一线工产值 − 一线工成本</div><div class="kpi-val ${lp>=0?'up':'down'}" style="font-size:15px">${W(lp,'万')}</div></div>
+      <div class="kpi"><div class="kpi-label">分摊利润 = 分摊产值 − 分摊成本</div><div class="kpi-val ${sp>=0?'up':'down'}" style="font-size:15px">${W(sp,'万')}</div></div>
+    </div></div>`;
+  }
+
+  // 成本明细
+  body+=`<div class="card"><div class="card-title">成本明细（元）</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">`;
+  COST_ITEMS.forEach(c=>{
+    const v=items[c]||0;if(!v)return;
+    body+=`<div class="kpi"><div class="kpi-label">${c}</div><div class="ws-m-val" style="font-size:13px;margin-top:4px">${WY(v)}</div></div>`;
+  });
+  body+=`</div></div>`;
+
+  // 效率指标
+  const effRows=[];
+  if(nd.node_rate&&nd.node_rate<2)effRows.push(['节点完成率',W(nd.node_rate*100,'%')]);
+  if(labor.labor_rate)effRows.push(['劳动生产率',W(labor.labor_rate,'万/人')]);
+  if(effRows.length){
+    body+=`<div class="card"><div class="card-title">效率指标</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    ${effRows.map(([l,v])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-val" style="font-size:15px">${v}</div></div>`).join('')}
+    </div></div>`;
+  }
+
+  // 流机
+  if(machData&&(machData.actual||machData.quota)){
+    const saved=(machData.quota||0)-(machData.actual||0);const ok=saved>=0;
+    body+=`<div class="card"><div class="card-title">流机管控</div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div class="kpi"><div class="kpi-label">当月定额</div><div class="kpi-val" style="font-size:15px">${WY(machData.quota||0)}</div></div>
+      <div class="kpi"><div class="kpi-label">实际花费</div><div class="kpi-val" style="font-size:15px">${WY(machData.actual||0)}</div></div>
+      <div class="kpi"><div class="kpi-label">节约/超支</div><div class="kpi-val ${ok?'up':'down'}" style="font-size:15px">${ok?'+':'-'}${WY(Math.abs(saved))}</div></div>
+    </div></div>`;
+  }
+
+  // 各月趋势（小图）
+  body+=`<div class="card"><div class="card-title">成本趋势（各月）
+    <button class="chart-expand" onclick="openChartModal('${name} · 成本趋势',function(c){return makeWsTrendChart(c,'${sn}')})">⛶ 全屏</button>
+  </div><div style="position:relative;height:160px"><canvas id="wsTrendC"></canvas></div></div>`;
+
+  document.getElementById('wsModalBody').innerHTML=body;
+  document.getElementById('wsModal').classList.remove('hidden');
+
+  setTimeout(()=>{
+    const c=document.getElementById('wsTrendC');if(!c)return;
+    makeWsTrendChart(c,sn);
+  },30);
+}
+
+function makeWsTrendChart(canvas,sn){
+  const lines=availableMonths.map(m=>getWsCost(sn,m).line/10000);
+  const spreads=availableMonths.map(m=>getWsCost(sn,m).spread/10000);
+  return new Chart(canvas,{type:'bar',data:{labels:availableMonths.map(m=>m+1+'月'),datasets:[{label:'一线工工资',data:lines,backgroundColor:'#f87171',borderRadius:4},{label:'分摊成本',data:spreads,backgroundColor:'#60a5fa',borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:12},boxWidth:10}}},scales:{x:{stacked:true,ticks:{font:{size:11}}},y:{stacked:true,ticks:{font:{size:11}}}}}});
+}
+
+function closeWsModal(e){
+  if(e&&e.target!==document.getElementById('wsModal'))return;
+  document.getElementById('wsModal').classList.add('hidden');
+}
+
+// ── 各车间看板 ────────────────────────────────
+function renderWorkshop(){
+  const mi=curMonthIdx;
+  let html='';
+  COST_SHEETS.forEach(sn=>{
+    const name=WS_MAP[sn]||sn;
+    const{line,spread,total}=getWsCost(sn,mi);
+    const pdata=(DB.profit[sn]||{})[mi]||{};
+    const labor=(DB.labor[name]||{})[mi]||{};
+    const nd=(DB.nodes[nodeKey(sn)]||{})[mi]||{};
+    const nr=nd.node_rate;
+    const pr=pdata['总利润'];
+    html+=`<div class="card">
+      <div class="card-title" style="font-size:14px;font-weight:700">
+        ${name}
+        ${nr&&nr<2?`<span class="pill ${nr>=0.95?'pill-ok':nr>=0.85?'pill-warn':'pill-bad'}">${W(nr*100,'%',0)}</span>`:''}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:12px">
+        <div class="kpi"><div class="kpi-label">总产值</div><div class="kpi-val" style="font-size:16px">${pdata['产值（总）']?W(pdata['产值（总）']/10000,'万'):'—'}</div></div>
+        <div class="kpi"><div class="kpi-label">利润</div><div class="kpi-val ${(pr||0)>=0?'up':'down'}" style="font-size:16px">${pr!=null?W(pr,'万'):'—'}</div></div>
+        <div class="kpi"><div class="kpi-label">成本合计</div><div class="kpi-val" style="font-size:16px">${WY(total)}</div></div>
+        <div class="kpi"><div class="kpi-label">人数</div><div class="kpi-val" style="font-size:16px">${labor.headcount||'—'}${labor.headcount?'人':''}</div></div>
+        <div class="kpi"><div class="kpi-label">劳动生产率</div><div class="kpi-val" style="font-size:16px">${labor.labor_rate?W(labor.labor_rate,'万/人'):'—'}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px">
+        <div>
+          <div style="font-size:11px;font-weight:600;color:#6b7280;margin-bottom:8px">分摊成本明细</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            ${SPREAD_ITEMS.map(c=>{const v=(getWsCost(sn,mi).items[c])||0;return v?`<div><div class="ws-m-label">${c}</div><div class="ws-m-val">${WY(v)}</div></div>`:''}).join('')}
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:600;color:#6b7280;margin-bottom:8px">各月成本趋势
+            <button class="chart-expand" style="margin-left:6px" onclick="openChartModal('${name} · 成本趋势',function(c){return makeWsTrendChart(c,'${sn}')})">⛶ 全屏</button>
+          </div>
+          <div style="position:relative;height:110px"><canvas id="wsc_${sn}"></canvas></div>
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('panel-workshop').innerHTML=html;
+  setTimeout(()=>{
+    COST_SHEETS.forEach(sn=>{const c=document.getElementById('wsc_'+sn);if(c)makeWsTrendChart(c,sn);});
+  },30);
+}
+
+// ── 车间对比 ──────────────────────────────────
+function renderCompare(){
+  const mi=curMonthIdx;
+  let html=`
+  <div class="charts-row">
+    <div class="card" style="margin:0">
+      <div class="card-title">产值 & 利润对比（${mi+1}月）
+        <button class="chart-expand" onclick="openChartModal('产值 & 利润对比',makeCompareOutputChart)">⛶ 全屏</button>
+      </div>
+      <div style="position:relative;height:180px"><canvas id="cmpOut"></canvas></div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-title">成本结构对比（${mi+1}月）
+        <button class="chart-expand" onclick="openChartModal('成本结构对比',makeCompareCostChart)">⛶ 全屏</button>
+      </div>
+      <div style="position:relative;height:180px"><canvas id="cmpCost"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title">节点完成率排名（${mi+1}月）
+      <button class="chart-expand" onclick="openChartModal('节点完成率排名',makeNodeChart)">⛶ 全屏</button>
+    </div>
+    <div style="position:relative;height:200px"><canvas id="cmpNode"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title">各车间横向数据汇总（${mi+1}月）</div>
+    <div style="overflow-x:auto"><table class="tbl">
+    <thead><tr><th>车间</th><th>总产值（万）</th><th>一线工产值</th><th>分摊产值</th><th>一线工工资</th><th>分摊成本</th><th>利润（万）</th><th>人数</th><th>人均产值</th><th>节点完成率</th></tr></thead><tbody>`;
+
+  COST_SHEETS.forEach(sn=>{
+    const name=WS_MAP[sn]||sn;
+    const{line,spread}=getWsCost(sn,mi);
+    const pdata=(DB.profit[sn]||{})[mi]||{};
+    const labor=(DB.labor[name]||{})[mi]||{};
+    const nd=(DB.nodes[nodeKey(sn)]||{})[mi]||{};
+    const pr=pdata['总利润'];
+    const hc=labor.headcount||0;
+    const totOut=(pdata['产值（总）']||0)/10000;
+    const lp=hc>0?W(totOut/hc,'万/人'):'—';
+    const nr=nd.node_rate;
+    html+=`<tr>
+      <td>${name}</td>
+      <td>${totOut?W(totOut,'万'):'—'}</td>
+      <td>${pdata['一线本工产值']?WY(pdata['一线本工产值']):'—'}</td>
+      <td>${pdata['分摊产值']?WY(pdata['分摊产值']):'—'}</td>
+      <td>${WY(line)}</td>
+      <td>${WY(spread)}</td>
+      <td class="${(pr||0)>=0?'up':'down'}">${pr!=null?W(pr,'万'):'—'}</td>
+      <td>${hc||'—'}</td>
+      <td>${lp}</td>
+      <td>${nr&&nr<2?W(nr*100,'%',1):'—'}</td>
+    </tr>`;
+  });
+  html+=`</tbody></table></div></div>`;
+  document.getElementById('panel-compare').innerHTML=html;
+  setTimeout(()=>{
+    if(charts.cmpOut)charts.cmpOut.destroy();charts.cmpOut=makeCompareOutputChart(document.getElementById('cmpOut'));
+    if(charts.cmpCost)charts.cmpCost.destroy();charts.cmpCost=makeCompareCostChart(document.getElementById('cmpCost'));
+    if(charts.cmpNode)charts.cmpNode.destroy();charts.cmpNode=makeNodeChart(document.getElementById('cmpNode'));
+  },30);
+}
+
+// ── 成本明细 ──────────────────────────────────
 function renderCost(){
   const mi=curMonthIdx;
-  let html=`<div class="card"><div class="card-title">分摊成本明细（元）<span style="font-size:11px;font-weight:400;color:#9ca3af">${mi+1}月</span></div>
+  let html=`<div class="card"><div class="card-title">分摊成本明细（${mi+1}月）</div>
   <div style="overflow-x:auto"><table class="tbl">
   <thead><tr><th>单元</th>${COST_ITEMS.map(c=>`<th>${c}</th>`).join('')}<th>合计</th></tr></thead><tbody>`;
   COST_SHEETS.forEach(sn=>{
@@ -372,50 +749,44 @@ function renderCost(){
     const tot=COST_ITEMS.reduce((s,c)=>s+(mo[c]||0),0);
     html+=`<tr><td>${WS_MAP[sn]||sn}</td>${COST_ITEMS.map(c=>`<td>${mo[c]?WY(mo[c]):''}</td>`).join('')}<td style="font-weight:700">${WY(tot)}</td></tr>`;
   });
-  const totals=COST_ITEMS.map(c=>{let s=0;COST_SHEETS.forEach(sn=>s+=((DB.costs[sn]||{})[mi]||{})[c]||0);return s;});
-  const grandTotal=totals.reduce((a,b)=>a+b,0);
-  html+=`<tr class="tot"><td>合计</td>${totals.map(v=>`<td>${WY(v)}</td>`).join('')}<td>${WY(grandTotal)}</td></tr>`;
+  const tots=COST_ITEMS.map(c=>{let s=0;COST_SHEETS.forEach(sn=>s+=((DB.costs[sn]||{})[mi]||{})[c]||0);return s;});
+  html+=`<tr class="tot"><td>合计</td>${tots.map(v=>`<td>${WY(v)}</td>`).join('')}<td>${WY(tots.reduce((a,b)=>a+b,0))}</td></tr>`;
   html+=`</tbody></table></div></div>`;
   document.getElementById('panel-cost').innerHTML=html;
 }
 
+// ── 利润分析 ──────────────────────────────────
 function renderProfit(){
   const mi=curMonthIdx;
   let html=`<div class="card"><div class="card-title">利润分析（${mi+1}月）</div>
   <div style="overflow-x:auto"><table class="tbl">
   <thead><tr><th>单元</th><th>总产值</th><th>一线工产值</th><th>分摊产值</th><th>一线工成本</th><th>分摊成本</th><th>总利润（万）</th></tr></thead><tbody>`;
   Object.entries(DB.profit).forEach(([nm,wd])=>{
-    const p=wd[mi]||{};
-    const pr=p['总利润']||0;
+    const p=wd[mi]||{};const pr=p['总利润']||0;
     html+=`<tr><td>${nm}</td><td>${p['产值（总）']?WY(p['产值（总）']):''}</td><td>${p['一线本工产值']?WY(p['一线本工产值']):''}</td><td>${p['分摊产值']?WY(p['分摊产值']):''}</td><td>${p['一线本工成本']?WY(p['一线本工成本']):''}</td><td>${p['分摊成本']?WY(p['分摊成本']):''}</td><td class="${pr>=0?'up':'down'}">${pr?W(pr,'万'):''}</td></tr>`;
   });
   html+=`</tbody></table></div></div>`;
-  html+=`<div class="card"><div class="card-title">各月利润趋势（万元）</div><div style="position:relative;height:180px"><canvas id="profitC"></canvas></div></div>`;
+  html+=`<div class="card"><div class="card-title">各月利润趋势
+    <button class="chart-expand" onclick="openChartModal('各月利润趋势',makeProfitChart)">⛶ 全屏</button>
+  </div><div style="position:relative;height:180px"><canvas id="profitC"></canvas></div></div>`;
   document.getElementById('panel-profit').innerHTML=html;
-  setTimeout(()=>{
-    const wsKeys=Object.keys(DB.profit).slice(0,7);
-    const colors=['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899','#06b6d4'];
-    const datasets=wsKeys.map((k,i)=>({label:k,data:availableMonths.map(m=>(((DB.profit[k]||{})[m]||{})['总利润'])||0),borderColor:colors[i%colors.length],backgroundColor:'transparent',tension:0.3,pointRadius:3,borderWidth:2}));
-    if(charts.profit)charts.profit.destroy();
-    charts.profit=new Chart(document.getElementById('profitC'),{type:'line',data:{labels:availableMonths.map(m=>m+1+'月'),datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},boxWidth:10}}},scales:{x:{ticks:{font:{size:11}}},y:{ticks:{font:{size:11}}}}}});
-  },50);
+  setTimeout(()=>{if(charts.profit)charts.profit.destroy();charts.profit=makeProfitChart(document.getElementById('profitC'));},30);
 }
 
+// ── 效率指标 ──────────────────────────────────
 function renderEfficiency(){
   const mi=curMonthIdx;
   let html=`<div class="card"><div class="card-title">劳动生产率 & 人数（${mi+1}月）</div>
   <table class="tbl"><thead><tr><th>车间</th><th>人数</th><th>劳动生产率（万/人）</th></tr></thead><tbody>`;
-  Object.entries(DB.labor).forEach(([nm,data])=>{
-    const d=data[mi]||{};if(!d.headcount&&!d.labor_rate)return;
-    html+=`<tr><td>${nm}</td><td>${d.headcount||'—'}</td><td>${d.labor_rate?W(d.labor_rate):''}</td></tr>`;
-  });
+  Object.entries(DB.labor).forEach(([nm,data])=>{const d=data[mi]||{};if(!d.headcount&&!d.labor_rate)return;html+=`<tr><td>${nm}</td><td>${d.headcount||'—'}</td><td>${d.labor_rate?W(d.labor_rate):''}</td></tr>`;});
   html+=`</tbody></table></div>`;
-  html+=`<div class="card"><div class="card-title">关键节点完成率（${mi+1}月）</div>`;
+  html+=`<div class="card"><div class="card-title">关键节点完成率（${mi+1}月）
+    <button class="chart-expand" onclick="openChartModal('关键节点完成率',makeNodeChart)">⛶ 全屏</button>
+  </div>`;
   Object.entries(DB.nodes).forEach(([nm,data])=>{
-    const d=data[mi]||{};const r=d.node_rate;if(r==null||r>=2)return;
-    const p=r*100;
+    const d=data[mi]||{};const r=d.node_rate;if(r==null||r>=2)return;const p=r*100;
     html+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-      <span style="font-size:12px;min-width:72px;color:#374151">${nm}</span>
+      <span style="font-size:12px;min-width:72px">${nm}</span>
       <div class="bar-bg" style="flex:1"><div class="bar-fill" style="width:${Math.min(p,100)}%;background:${p>=95?'#10b981':p>=85?'#f59e0b':'#ef4444'}"></div></div>
       <span style="font-size:12px;font-weight:600;min-width:44px;text-align:right;color:${p>=95?'#10b981':p>=85?'#f59e0b':'#ef4444'}">${W(p,'%',1)}</span>
     </div>`;
@@ -423,59 +794,46 @@ function renderEfficiency(){
   html+=`</div>`;
   if(Object.keys(DB.utilization).length>0){
     html+=`<div class="card"><div class="card-title">车间利用率（${mi+1}月）</div>`;
-    Object.entries(DB.utilization).forEach(([nm,data])=>{
-      const d=data[mi]||{};const r=d.util_rate;if(!r)return;
-      html+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px">
-        <span style="font-size:12px;min-width:72px">${nm}</span>
-        <span style="font-size:11px;color:#9ca3af;min-width:56px">${d.area?d.area+'m²':''}</span>
-        <div class="bar-bg" style="flex:1"><div class="bar-fill" style="width:${Math.min(r,100)}%;background:#3b82f6"></div></div>
-        <span style="font-size:12px;font-weight:600;min-width:44px;text-align:right">${W(r,'%')}</span>
-      </div>`;
-    });
+    Object.entries(DB.utilization).forEach(([nm,data])=>{const d=data[mi]||{};const r=d.util_rate;if(!r)return;html+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:10px"><span style="font-size:12px;min-width:72px">${nm}</span><span style="font-size:11px;color:#9ca3af;min-width:56px">${d.area?d.area+'m²':''}</span><div class="bar-bg" style="flex:1"><div class="bar-fill" style="width:${Math.min(r,100)}%;background:#3b82f6"></div></div><span style="font-size:12px;font-weight:600;min-width:44px;text-align:right">${W(r,'%')}</span></div>`;});
     html+=`</div>`;
   }
   document.getElementById('panel-efficiency').innerHTML=html;
 }
 
+// ── 流机管控 ──────────────────────────────────
 function renderMachine(){
   const mi=curMonthIdx;
-  let html=`<div class="card"><div class="card-title">流机定额 vs 实际花费（${mi+1}月）</div>
+  let html=`<div class="card"><div class="card-title">流机定额 vs 实际（${mi+1}月）</div>
   <div style="overflow-x:auto"><table class="tbl">
   <thead><tr><th>车间</th><th>定额（元）</th><th>实际花费（元）</th><th>节约/超支</th><th>状态</th></tr></thead><tbody>`;
   Object.entries(DB.machine).forEach(([nm,data])=>{
-    if(nm==='合计')return;
-    const d=data[mi]||{};if(!d.actual&&!d.quota)return;
-    const saved=d.saved!=null?d.saved:(d.quota||0)-(d.actual||0);
-    const ok=saved>=0;
+    if(nm==='合计')return;const d=data[mi]||{};if(!d.actual&&!d.quota)return;
+    const saved=d.saved!=null?d.saved:(d.quota||0)-(d.actual||0);const ok=saved>=0;
     html+=`<tr><td>${nm}</td><td>${WY(d.quota||0)}</td><td>${WY(d.actual||0)}</td><td class="${ok?'up':'down'}">${ok?'+':'-'} ${WY(Math.abs(saved))}</td><td><span class="pill ${ok?'pill-ok':'pill-bad'}">${ok?'✓ 未超定额':'⚠ 超出定额'}</span></td></tr>`;
   });
   html+=`</tbody></table></div></div>`;
-  html+=`<div class="card"><div class="card-title">各月流机花费趋势（元）</div><div style="position:relative;height:180px"><canvas id="machineC"></canvas></div></div>`;
+  html+=`<div class="card"><div class="card-title">各月流机花费趋势
+    <button class="chart-expand" onclick="openChartModal('各月流机花费趋势',makeMachineChart)">⛶ 全屏</button>
+  </div><div style="position:relative;height:180px"><canvas id="machineC"></canvas></div></div>`;
   document.getElementById('panel-machine').innerHTML=html;
-  setTimeout(()=>{
-    const keys=Object.keys(DB.machine).filter(k=>k!=='合计');
-    const colors=['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#ec4899'];
-    const datasets=keys.map((k,i)=>({label:k,data:availableMonths.map(m=>((DB.machine[k]||{})[m]||{}).actual||0),borderColor:colors[i%colors.length],backgroundColor:'transparent',tension:0.3,pointRadius:3,borderWidth:2}));
-    if(charts.machine)charts.machine.destroy();
-    charts.machine=new Chart(document.getElementById('machineC'),{type:'line',data:{labels:availableMonths.map(m=>m+1+'月'),datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{font:{size:11},boxWidth:10}}},scales:{x:{ticks:{font:{size:11}}},y:{ticks:{font:{size:11}}}}}});
-  },50);
+  setTimeout(()=>{if(charts.machine)charts.machine.destroy();charts.machine=makeMachineChart(document.getElementById('machineC'));},30);
 }
 
+// ── 路由 ─────────────────────────────────────
 function showTab(name,btn){
   document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
   document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
   document.getElementById('panel-'+name).classList.add('active');
   btn.classList.add('active');
-  if(name==='overview')renderOverview();
-  if(name==='cost')renderCost();
-  if(name==='profit')renderProfit();
-  if(name==='efficiency')renderEfficiency();
-  if(name==='machine')renderMachine();
+  const renders={overview:renderOverview,workshop:renderWorkshop,compare:renderCompare,cost:renderCost,profit:renderProfit,efficiency:renderEfficiency,machine:renderMachine};
+  if(renders[name])renders[name]();
 }
 function onMonthChange(){
   curMonthIdx=parseInt(document.getElementById('monthSel').value);
   document.querySelector('.tab.active').click();
 }
+// ESC 关弹层
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeChartModal();closeWsModal();}});
 </script>
 </body>
 </html>
