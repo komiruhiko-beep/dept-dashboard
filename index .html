@@ -1,0 +1,1193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>结构加工事业部 · 运营看板</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0a0e1a;
+  --bg2:#0f1628;
+  --bg3:#141d35;
+  --bg4:#1a2540;
+  --border:#1e2d4a;
+  --border2:#243354;
+  --accent:#3b82f6;
+  --accent2:#60a5fa;
+  --accent-glow:rgba(59,130,246,.25);
+  --cyan:#06b6d4;
+  --green:#10b981;
+  --amber:#f59e0b;
+  --red:#ef4444;
+  --purple:#8b5cf6;
+  --text1:#e8edf5;
+  --text2:#8fa3c4;
+  --text3:#4d6280;
+}
+html,body{height:100%}
+body{font-family:'Inter','PingFang SC','Microsoft YaHei',sans-serif;background:var(--bg);color:var(--text1);font-size:13px;min-height:100vh}
+
+/* ── 登录页 ── */
+.login-screen{position:fixed;inset:0;background:var(--bg);display:flex;align-items:center;justify-content:center;z-index:9999;overflow:hidden}
+.login-bg{position:absolute;inset:0;background:radial-gradient(ellipse 80% 60% at 50% 0%,rgba(59,130,246,.12) 0%,transparent 70%)}
+.login-grid{position:absolute;inset:0;background-image:linear-gradient(var(--border) 1px,transparent 1px),linear-gradient(90deg,var(--border) 1px,transparent 1px);background-size:40px 40px;opacity:.4}
+.login-box{position:relative;background:linear-gradient(135deg,rgba(15,22,40,.95),rgba(20,29,53,.95));border:1px solid var(--border2);border-radius:20px;padding:2.8rem 2.2rem;width:360px;box-shadow:0 0 60px rgba(59,130,246,.15),0 30px 80px rgba(0,0,0,.5)}
+.login-glow{position:absolute;top:-40px;left:50%;transform:translateX(-50%);width:200px;height:80px;background:var(--accent);filter:blur(50px);opacity:.3;border-radius:50%}
+.login-logo{text-align:center;margin-bottom:18px}
+.login-logo-icon{width:52px;height:52px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:14px;display:inline-flex;align-items:center;justify-content:center;font-size:24px;box-shadow:0 0 30px var(--accent-glow)}
+.login-title{font-size:18px;font-weight:700;text-align:center;margin-bottom:3px;color:var(--text1);letter-spacing:.5px}
+.login-corp{font-size:11px;color:var(--text3);text-align:center;margin-bottom:28px;letter-spacing:1px;text-transform:uppercase}
+.login-label{font-size:11px;color:var(--text2);margin-bottom:7px;font-weight:500;letter-spacing:.3px}
+.login-input{width:100%;padding:10px 14px;border:1px solid var(--border2);border-radius:10px;font-size:13px;outline:none;transition:all .2s;margin-bottom:14px;background:rgba(255,255,255,.04);color:var(--text1)}
+.login-input::placeholder{color:var(--text3)}
+.login-input:focus{border-color:var(--accent);background:rgba(59,130,246,.06);box-shadow:0 0 0 3px var(--accent-glow)}
+.login-btn{width:100%;padding:11px;background:linear-gradient(135deg,var(--accent),#2563eb);color:#fff;border:none;border-radius:10px;font-size:13px;font-weight:600;cursor:pointer;letter-spacing:.5px;transition:all .2s;box-shadow:0 4px 20px var(--accent-glow)}
+.login-btn:hover{transform:translateY(-1px);box-shadow:0 6px 28px rgba(59,130,246,.4)}
+.login-err{font-size:11px;color:var(--red);text-align:center;margin-top:10px;min-height:16px}
+.hidden{display:none!important}
+
+/* ── 顶部导航 ── */
+.header{background:linear-gradient(90deg,var(--bg2),var(--bg3));border-bottom:1px solid var(--border);padding:0 24px;display:flex;align-items:center;justify-content:space-between;position:sticky;top:0;z-index:100;height:56px}
+.header-brand{display:flex;align-items:center;gap:10px}
+.header-icon{width:30px;height:30px;background:linear-gradient(135deg,var(--accent),var(--cyan));border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:14px;box-shadow:0 0 12px var(--accent-glow)}
+.header-title{font-size:15px;font-weight:700;color:var(--text1);letter-spacing:.3px}
+.header-sub{font-size:10px;color:var(--text3);margin-top:1px}
+.header-right{display:flex;gap:8px;align-items:center}
+.header-badge{font-size:10px;padding:3px 10px;border-radius:20px;font-weight:500;letter-spacing:.3px}
+.badge-admin{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+.badge-time{background:var(--bg4);color:var(--text2);border:1px solid var(--border);font-variant-numeric:tabular-nums}
+.h-select{font-size:12px;padding:5px 10px;border-radius:7px;border:1px solid var(--border2);background:var(--bg4);color:var(--text1);outline:none;cursor:pointer}
+.h-btn{font-size:11px;padding:5px 12px;border-radius:7px;border:1px solid var(--border2);background:transparent;color:var(--text2);cursor:pointer;transition:all .15s;letter-spacing:.3px}
+.h-btn:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── 主体 ── */
+.main{max-width:1500px;margin:0 auto;padding:20px 24px}
+
+/* ── 标签栏 ── */
+.tab-row{display:flex;gap:2px;margin-bottom:20px;background:var(--bg2);border:1px solid var(--border);padding:4px;border-radius:10px;width:fit-content}
+.tab{font-size:11px;padding:6px 14px;border-radius:7px;cursor:pointer;border:none;background:transparent;color:var(--text2);font-weight:500;white-space:nowrap;letter-spacing:.3px;transition:all .2s}
+.tab:hover{color:var(--text1)}
+.tab.active{background:linear-gradient(135deg,var(--accent),#2563eb);color:#fff;box-shadow:0 2px 12px var(--accent-glow)}
+.panel{display:none}.panel.active{display:block}
+
+/* ── 上传区 ── */
+.upload-zone{border:1px dashed var(--border2);border-radius:12px;padding:2rem;text-align:center;cursor:pointer;transition:all .2s;background:var(--bg3);margin-bottom:20px}
+.upload-zone:hover,.upload-zone.drag{border-color:var(--accent);background:rgba(59,130,246,.06)}
+.upload-status{font-size:11px;margin-top:10px;padding:7px 14px;border-radius:7px;display:none}
+.status-ok{background:rgba(16,185,129,.1);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+.status-err{background:rgba(239,68,68,.1);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+.status-loading{background:rgba(245,158,11,.1);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+
+/* ── KPI 卡片 ── */
+.kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:16px}
+.kpi{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px 16px;position:relative;overflow:hidden;transition:border-color .2s}
+.kpi::before{content:'';position:absolute;top:0;left:0;right:0;height:2px;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:0;transition:opacity .3s}
+.kpi:hover{border-color:var(--border2)}
+.kpi:hover::before{opacity:1}
+.kpi-label{font-size:10px;color:var(--text3);margin-bottom:6px;text-transform:uppercase;letter-spacing:.8px;font-weight:500}
+.kpi-val{font-size:22px;font-weight:700;color:var(--text1);letter-spacing:-.5px;font-variant-numeric:tabular-nums}
+.kpi-sub{font-size:10px;color:var(--text3);margin-top:5px}
+.kpi-accent{border-color:rgba(59,130,246,.4)}
+.kpi-accent::before{opacity:1;background:linear-gradient(90deg,transparent,var(--accent),transparent)}
+.up{color:var(--green)}.down{color:var(--red)}
+
+/* ── 区块卡片 ── */
+.card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:16px 20px;margin-bottom:14px}
+.card-title{font-size:11px;font-weight:600;color:var(--text2);margin-bottom:14px;display:flex;align-items:center;justify-content:space-between;text-transform:uppercase;letter-spacing:.8px}
+.card-title-dot{width:6px;height:6px;border-radius:50%;background:var(--accent);margin-right:7px;box-shadow:0 0 6px var(--accent);display:inline-block}
+
+/* ── 全屏图表弹层 ── */
+.modal-overlay{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(4px);z-index:8000;display:flex;align-items:center;justify-content:center}
+.modal-box{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;padding:24px;width:92vw;height:86vh;display:flex;flex-direction:column;box-shadow:0 0 80px rgba(59,130,246,.1),0 40px 100px rgba(0,0,0,.6)}
+.modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:16px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.modal-title{font-size:13px;font-weight:600;color:var(--text1);text-transform:uppercase;letter-spacing:.8px;display:flex;align-items:center;gap:8px}
+.modal-close{font-size:18px;color:var(--text3);cursor:pointer;line-height:1;border:none;background:none;width:28px;height:28px;border-radius:7px;display:flex;align-items:center;justify-content:center;transition:all .15s}
+.modal-close:hover{background:var(--bg4);color:var(--text1)}
+.modal-body{flex:1;position:relative;min-height:0}
+.chart-expand{font-size:10px;padding:3px 9px;border-radius:5px;border:1px solid var(--border2);background:transparent;color:var(--text3);cursor:pointer;letter-spacing:.3px;transition:all .15s}
+.chart-expand:hover{border-color:var(--accent);color:var(--accent)}
+
+/* ── 车间卡片 ── */
+.ws-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px;margin-bottom:14px}
+.ws-card{background:var(--bg3);border:1px solid var(--border);border-radius:12px;padding:14px 16px;cursor:pointer;transition:all .2s;position:relative;overflow:hidden}
+.ws-card::after{content:'';position:absolute;inset:0;background:linear-gradient(135deg,var(--accent-glow),transparent);opacity:0;transition:opacity .2s;pointer-events:none}
+.ws-card:hover{border-color:var(--border2);transform:translateY(-1px);box-shadow:0 4px 20px rgba(0,0,0,.3)}
+.ws-card:hover::after{opacity:1}
+.ws-card.prod{border-left:2px solid var(--accent)}
+.ws-card.cost-only{border-left:2px solid var(--amber)}
+.ws-name{font-size:12px;font-weight:600;margin-bottom:10px;display:flex;align-items:center;justify-content:space-between;color:var(--text1)}
+.ws-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:7px}
+.ws-m-label{font-size:9px;color:var(--text3);text-transform:uppercase;letter-spacing:.5px}
+.ws-m-val{font-size:12px;font-weight:600;color:var(--text1);margin-top:2px}
+.pill{font-size:9px;padding:2px 7px;border-radius:10px;font-weight:600;letter-spacing:.3px}
+.pill-ok{background:rgba(16,185,129,.15);color:var(--green);border:1px solid rgba(16,185,129,.3)}
+.pill-warn{background:rgba(245,158,11,.15);color:var(--amber);border:1px solid rgba(245,158,11,.3)}
+.pill-bad{background:rgba(239,68,68,.15);color:var(--red);border:1px solid rgba(239,68,68,.3)}
+
+/* ── 车间详情弹层 ── */
+.ws-modal{position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);z-index:7000;display:flex;align-items:center;justify-content:center}
+.ws-modal-box{background:var(--bg2);border:1px solid var(--border2);border-radius:16px;width:88vw;max-height:90vh;overflow-y:auto;padding:22px 26px;box-shadow:0 0 60px rgba(59,130,246,.1),0 40px 100px rgba(0,0,0,.6)}
+.ws-modal-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:18px;padding-bottom:14px;border-bottom:1px solid var(--border)}
+.ws-modal-title{font-size:15px;font-weight:700;color:var(--text1);display:flex;align-items:center;gap:8px}
+.ws-modal-title::before{content:'';width:4px;height:18px;background:linear-gradient(var(--accent),var(--cyan));border-radius:2px;display:block}
+
+/* ── 表格 ── */
+.tbl{width:100%;border-collapse:collapse;font-size:11px}
+.tbl th{text-align:right;padding:8px 8px;color:var(--text3);font-weight:500;border-bottom:1px solid var(--border);white-space:nowrap;background:var(--bg);text-transform:uppercase;letter-spacing:.5px;font-size:10px}
+.tbl th:first-child,.tbl td:first-child{text-align:left}
+.tbl td{padding:8px 8px;border-bottom:1px solid var(--border);text-align:right;color:var(--text2)}
+.tbl td:first-child{font-weight:600;white-space:nowrap;color:var(--text1)}
+.tbl tr:hover td{background:rgba(59,130,246,.05)}
+.tbl tr.tot td{font-weight:700;border-top:1px solid var(--border2);background:var(--bg4);color:var(--text1)}
+
+/* ── 进度条 ── */
+.bar-bg{height:4px;background:var(--bg4);border-radius:2px;margin-top:6px;overflow:hidden}
+.bar-fill{height:4px;border-radius:2px;transition:width .6s cubic-bezier(.4,0,.2,1)}
+
+/* ── 分割线区块标题 ── */
+.section-label{font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:1px;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.section-label::after{content:'';flex:1;height:1px;background:var(--border)}
+
+.charts-row{display:grid;grid-template-columns:minmax(0,1.6fr) minmax(0,1fr);gap:14px;margin-bottom:14px}
+.no-data{text-align:center;padding:4rem;color:var(--text3);font-size:13px;letter-spacing:.3px}
+.no-data-icon{font-size:40px;margin-bottom:12px;opacity:.4}
+select{outline:none}
+
+/* ── 滚动条 ── */
+::-webkit-scrollbar{width:5px;height:5px}
+::-webkit-scrollbar-track{background:var(--bg2)}
+::-webkit-scrollbar-thumb{background:var(--border2);border-radius:3px}
+::-webkit-scrollbar-thumb:hover{background:var(--accent)}
+
+@media(max-width:768px){
+  .kpi-grid{grid-template-columns:repeat(2,1fr)}
+  .ws-grid{grid-template-columns:1fr}
+  .charts-row{grid-template-columns:1fr}
+  .main{padding:12px}
+  .tab-row{flex-wrap:wrap}
+}
+</style>
+</head>
+<body>
+
+<!-- 登录 -->
+<div class="login-screen" id="loginScreen">
+  <div class="login-bg"></div>
+  <div class="login-grid"></div>
+  <div class="login-box">
+    <div class="login-glow"></div>
+    <div class="login-logo"><div class="login-logo-icon">📊</div></div>
+    <div class="login-title">运营数据看板</div>
+    <div class="login-corp">结构加工事业部 · Operations Dashboard</div>
+    <div class="login-label">访问密码</div>
+    <input class="login-input" type="password" id="loginPwd" placeholder="请输入密码" onkeydown="if(event.key==='Enter')doLogin()">
+    <button class="login-btn" onclick="doLogin()">进 入 系 统</button>
+    <div class="login-err" id="loginErr"></div>
+  </div>
+</div>
+
+<!-- 全屏图表弹层 -->
+<div class="modal-overlay hidden" id="chartModal" onclick="closeChartModal(event)">
+  <div class="modal-box" onclick="event.stopPropagation()">
+    <div class="modal-header">
+      <span class="modal-title"><span class="card-title-dot"></span><span id="modalTitle"></span></span>
+      <button class="modal-close" onclick="closeChartModal()">✕</button>
+    </div>
+    <div class="modal-body"><canvas id="modalCanvas"></canvas></div>
+  </div>
+</div>
+
+<!-- 车间详情弹层 -->
+<div class="ws-modal hidden" id="wsModal" onclick="closeWsModal(event)">
+  <div class="ws-modal-box" onclick="event.stopPropagation()">
+    <div class="ws-modal-header">
+      <span class="ws-modal-title" id="wsModalTitle"></span>
+      <button class="modal-close" onclick="closeWsModal()">✕</button>
+    </div>
+    <div id="wsModalBody"></div>
+  </div>
+</div>
+
+<!-- 主界面 -->
+<div id="appRoot" class="hidden">
+  <div class="header">
+    <div class="header-brand">
+      <div class="header-icon">📊</div>
+      <div>
+        <div class="header-title">结构加工事业部</div>
+        <div class="header-sub" id="dataSourceLabel">OPERATIONS DASHBOARD</div>
+      </div>
+    </div>
+    <div class="header-right">
+      <select class="h-select" id="monthSel" onchange="onMonthChange()" style="display:none"></select>
+      <span class="header-badge badge-admin" id="adminTag" style="display:none">🔑 ADMIN</span>
+      <span class="header-badge badge-time" id="clockBadge"></span>
+      <button class="h-btn" onclick="doLogout()">退出</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <!-- 管理员上传区 -->
+    <div id="adminBar" class="hidden">
+      <div class="upload-zone" onclick="document.getElementById('fileInput').click()"
+        ondragover="event.preventDefault();this.classList.add('drag')"
+        ondragleave="this.classList.remove('drag')"
+        ondrop="event.preventDefault();this.classList.remove('drag');handleDrop(event)">
+        <div style="font-size:28px;margin-bottom:8px;opacity:.6">📂</div>
+        <div style="font-size:13px;font-weight:600;margin-bottom:4px;color:var(--text1)">上传「事业部各车间成本.xlsx」</div>
+        <div style="font-size:11px;color:var(--text3)">点击选择或拖拽文件 · 上传后自动保存</div>
+        <input type="file" id="fileInput" accept=".xlsx,.xls" style="display:none" onchange="handleFile(this)">
+        <div id="uploadStatus" class="upload-status"></div>
+      </div>
+    </div>
+
+    <!-- 标签页 -->
+    <div class="tab-row">
+      <button class="tab active" onclick="showTab('dashboard',this)">综合管理</button>
+      <button class="tab" onclick="showTab('overview',this)">部门总览</button>
+      <button class="tab" onclick="showTab('workshop',this)">各车间看板</button>
+      <button class="tab" onclick="showTab('compare',this)">车间对比</button>
+      <button class="tab" onclick="showTab('cost',this)">成本明细</button>
+      <button class="tab" onclick="showTab('profit',this)">利润分析</button>
+      <button class="tab" onclick="showTab('efficiency',this)">效率指标</button>
+      <button class="tab" onclick="showTab('machine',this)">流机管控</button>
+    </div>
+
+    <div class="panel active" id="panel-dashboard"><div class="no-data"><div class="no-data-icon">📊</div>暂无数据 · 请管理员上传 Excel</div></div>
+    <div class="panel" id="panel-overview"><div class="no-data"><div class="no-data-icon">📊</div>暂无数据</div></div>
+    <div class="panel" id="panel-workshop"><div class="no-data"><div class="no-data-icon">🏭</div>暂无数据</div></div>
+    <div class="panel" id="panel-compare"><div class="no-data"><div class="no-data-icon">📊</div>暂无数据</div></div>
+    <div class="panel" id="panel-cost"><div class="no-data"><div class="no-data-icon">💰</div>暂无数据</div></div>
+    <div class="panel" id="panel-profit"><div class="no-data"><div class="no-data-icon">📈</div>暂无数据</div></div>
+    <div class="panel" id="panel-efficiency"><div class="no-data"><div class="no-data-icon">⚡</div>暂无数据</div></div>
+    <div class="panel" id="panel-machine"><div class="no-data"><div class="no-data-icon">🔧</div>暂无数据</div></div>
+  </div>
+</div>
+
+<script>
+// ══ 密码配置 ══
+const VIEWER_PWD = 'view2026';
+const ADMIN_PWD  = 'admin2026';
+// ════════════
+
+const STORAGE_KEY = 'dept_db_v2';
+const COST_SHEETS = ['冷加工','小件配套','外膛','金工','数控预处理','结构预制','工艺准备','综合室','本部','检验室'];
+const WS_MAP = {'冷加工':'冷加工车间','小件配套':'小件配套车间','外膛':'外镗车间','金工':'金工车间','数控预处理':'数控预处理车间','结构预制':'结构预制车间','工艺准备':'工艺准备室','综合室':'综合室','本部':'本部','检验室':'检验室'};
+const COST_ITEMS = ['一线本工（承包）','一线本工（非承包）','电费','气体费','辅料','固定人员薪酬','基建修理费','设备修理费','维修材料','差旅交通','分包劳务','折旧费','安全生产费'];
+const SPREAD_ITEMS = COST_ITEMS.filter(c=>!c.startsWith('一线'));
+const COLORS = ['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#f97316','#84cc16','#14b8a6'];
+const CHART_DEFAULTS = {
+  color:'#8fa3c4',
+  grid:'rgba(30,45,74,.8)',
+  font:{family:"'Inter','PingFang SC',sans-serif"}
+};
+
+let DB={}, availableMonths=[], curMonthIdx=0, isAdmin=false, charts={}, modalChart=null;
+
+// ── 时钟 ─────────────────────────────────────
+function tickClock(){
+  const el=document.getElementById('clockBadge');
+  if(el)el.textContent=new Date().toLocaleString('zh-CN',{month:'2-digit',day:'2-digit',hour:'2-digit',minute:'2-digit'});
+}
+setInterval(tickClock,1000);tickClock();
+
+// ── 登录 ─────────────────────────────────────
+function doLogin(){
+  const p=document.getElementById('loginPwd').value.trim();
+  if(p===ADMIN_PWD){isAdmin=true;enterApp();}
+  else if(p===VIEWER_PWD){isAdmin=false;enterApp();}
+  else{document.getElementById('loginErr').textContent='密码错误，请重试';document.getElementById('loginPwd').value='';}
+}
+function enterApp(){
+  document.getElementById('loginScreen').classList.add('hidden');
+  document.getElementById('appRoot').classList.remove('hidden');
+  if(isAdmin){document.getElementById('adminBar').classList.remove('hidden');document.getElementById('adminTag').style.display='inline';}
+  loadSavedData();
+}
+function doLogout(){
+  isAdmin=false;
+  document.getElementById('loginScreen').classList.remove('hidden');
+  document.getElementById('appRoot').classList.add('hidden');
+  document.getElementById('loginPwd').value='';
+  document.getElementById('loginErr').textContent='';
+  document.getElementById('adminTag').style.display='none';
+  document.getElementById('adminBar').classList.add('hidden');
+}
+
+// ── 持久化 ───────────────────────────────────
+function saveData(){try{localStorage.setItem(STORAGE_KEY,JSON.stringify({DB,availableMonths,savedAt:new Date().toLocaleString('zh-CN')}));return true;}catch(e){return false;}}
+function loadSavedData(){
+  try{
+    const raw=localStorage.getItem(STORAGE_KEY);if(!raw)return;
+    const s=JSON.parse(raw);DB=s.DB||{};availableMonths=s.availableMonths||[];
+    if(availableMonths.length){
+      curMonthIdx=availableMonths[availableMonths.length-1];
+      initMonthSel();
+      document.getElementById('dataSourceLabel').textContent=`已加载 ${availableMonths.length} 个月数据 · 更新于 ${s.savedAt||''}`;
+      showTab('overview',document.querySelector('.tab'));
+    }
+  }catch(e){console.warn(e);}
+}
+
+// ── 文件解析 ─────────────────────────────────
+function handleFile(i){if(i.files[0])parseExcel(i.files[0]);}
+function handleDrop(e){if(e.dataTransfer.files[0])parseExcel(e.dataTransfer.files[0]);}
+function setStatus(msg,type){const el=document.getElementById('uploadStatus');el.textContent=msg;el.className='upload-status status-'+type;el.style.display='block';}
+function isMonthCol(v){return v instanceof Date;}
+// 从header中提取月份列，每个月只取第一次出现的列（跳过累计列）
+function extractMonthCols(header){
+  const mCols={};const seen=new Set();
+  header.forEach((v,i)=>{
+    if(!isMonthCol(v))return;
+    const m=v.getMonth();
+    if(!seen.has(m)){seen.add(m);mCols[i]=m;}
+  });
+  return mCols;
+}
+
+async function parseExcel(file){
+  setStatus('⏳ 解析中...','loading');
+  try{
+    const buf=await file.arrayBuffer();
+    const wb=XLSX.read(buf,{type:'array',cellDates:true});
+    DB={costs:{},profit:{},labor:{},nodes:{},machine:{},utilization:{}};
+
+    COST_SHEETS.forEach(sn=>{
+      if(!wb.SheetNames.includes(sn))return;
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets[sn],{header:1,defval:null});
+      const header=rows[0]||[];
+      const mCols=extractMonthCols(header); // ← 去重，跳过累计列
+      const wsData={};
+      rows.slice(1).forEach(row=>{
+        const item=row[1];if(!item)return;
+        Object.entries(mCols).forEach(([ci,mi])=>{wsData[mi]=wsData[mi]||{};wsData[mi][item]=(wsData[mi][item]||0)+(parseFloat(row[ci])||0);});
+      });
+      DB.costs[sn]=wsData;
+    });
+
+    if(wb.SheetNames.includes('利润表')){
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets['利润表'],{header:1,defval:null});
+      const header=rows[0]||[];
+      const mCols=extractMonthCols(header); // ← 去重
+      let curWs='';
+      rows.slice(1).forEach(row=>{
+        if(row[0]&&typeof row[0]==='string'&&row[0].trim())curWs=row[0].trim();
+        const item=row[1];if(!item||!curWs)return;
+        DB.profit[curWs]=DB.profit[curWs]||{};
+        Object.entries(mCols).forEach(([ci,mi])=>{DB.profit[curWs][mi]=DB.profit[curWs][mi]||{};DB.profit[curWs][mi][item]=parseFloat(row[ci])||0;});
+      });
+    }
+
+    if(wb.SheetNames.includes('劳率')){
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets['劳率'],{header:1,defval:null});
+      const header=rows[0]||[];
+      const mCols=extractMonthCols(header); // ← 去重
+      let cat='';
+      rows.slice(1).forEach(row=>{
+        if(row[0]&&typeof row[0]==='string')cat=row[0];
+        const nm=row[1];if(!nm||typeof nm!=='string')return;
+        const key=nm.trim();DB.labor[key]=DB.labor[key]||{};
+        Object.entries(mCols).forEach(([ci,mi])=>{
+          DB.labor[key][mi]=DB.labor[key][mi]||{};const v=row[ci];
+          if(cat==='人数')DB.labor[key][mi].headcount=parseFloat(v)||0;
+          else if(cat==='劳动生产率'&&typeof v==='number'&&v<1000)DB.labor[key][mi].labor_rate=v;
+        });
+      });
+    }
+
+    if(wb.SheetNames.includes('关键节点完成率')){
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets['关键节点完成率'],{header:1,defval:null});
+      const header=rows[0]||[];const mCols={};
+      ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'].forEach((m,i)=>{const ci=header.indexOf(m);if(ci>0)mCols[ci]=i;});
+      let curWs='';
+      rows.slice(1).forEach(row=>{
+        if(row[0]&&typeof row[0]==='string')curWs=row[0].trim();
+        const item=row[1];if(!item||!curWs)return;
+        DB.nodes[curWs]=DB.nodes[curWs]||{};
+        Object.entries(mCols).forEach(([ci,mi])=>{
+          DB.nodes[curWs][mi]=DB.nodes[curWs][mi]||{};const v=row[ci];
+          if(item==='完成率'&&typeof v==='number')DB.nodes[curWs][mi].node_rate=v;
+          if(item==='总节点数')DB.nodes[curWs][mi].total_nodes=parseFloat(v)||0;
+        });
+      });
+    }
+
+    if(wb.SheetNames.includes('流机节约')){
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets['流机节约'],{header:1,defval:null});
+      const header=rows[0]||[];
+      const mCols=extractMonthCols(header); // ← 去重
+      let cat='';
+      rows.slice(1).forEach(row=>{
+        if(row[0]&&typeof row[0]==='string')cat=row[0].trim();
+        const nm=row[1];if(!nm||typeof nm!=='string')return;
+        const key=nm.trim();DB.machine[key]=DB.machine[key]||{};
+        Object.entries(mCols).forEach(([ci,mi])=>{
+          DB.machine[key][mi]=DB.machine[key][mi]||{};const v=parseFloat(row[ci])||0;
+          if(cat==='花费')DB.machine[key][mi].actual=v;
+          else if(cat==='定额'&&nm==='当月定额'){DB.machine['合计']=DB.machine['合计']||{};DB.machine['合计'][mi]=DB.machine['合计'][mi]||{};DB.machine['合计'][mi].quota=v;}
+          else if(cat==='节约')DB.machine[key][mi].saved=v;
+        });
+      });
+    }
+
+    if(wb.SheetNames.includes('车间利用率')){
+      const rows=XLSX.utils.sheet_to_json(wb.Sheets['车间利用率'],{header:1,defval:null});
+      const header=rows[0]||[];const mCols={};
+      ['1月','2月','3月','4月','5月','6月','7月','8月','9月','10月','11月','12月'].forEach((m,i)=>{const ci=header.indexOf(m);if(ci>=0)mCols[ci]=i;});
+      let curWs='';
+      rows.slice(1).forEach(row=>{
+        if(row[0]&&typeof row[0]==='string'&&row[0].trim()&&row[0]!=='累计')curWs=row[0].trim();
+        const item=row[1];if(!item||!curWs)return;
+        DB.utilization[curWs]=DB.utilization[curWs]||{};
+        if(item==='面积'){
+          // 面积是固定值，存到_area字段（不按月）
+          const v=parseFloat(row[2]||row[Object.keys(mCols)[0]]); // 取第一个数值列
+          if(!isNaN(v)&&v>0) DB.utilization[curWs]._area=v;
+        } else if(item.includes('吨位')||item==='月吨位'||item==='产量'){
+          // 月吨位按月存储
+          Object.entries(mCols).forEach(([ci,mi])=>{
+            DB.utilization[curWs][mi]=DB.utilization[curWs][mi]||{};
+            const v=parseFloat(row[ci]);
+            if(!isNaN(v)) DB.utilization[curWs][mi].tonnage=v;
+          });
+        } else if(item==='利用率'){
+          Object.entries(mCols).forEach(([ci,mi])=>{
+            DB.utilization[curWs][mi]=DB.utilization[curWs][mi]||{};
+            const v=parseFloat(row[ci]);
+            if(!isNaN(v)) DB.utilization[curWs][mi].util_rate=v;
+          });
+        }
+      });
+      // 计算每月单位面积产量 = 月吨位 / 面积 * 100
+      Object.entries(DB.utilization).forEach(([nm,wsData])=>{
+        const area=wsData._area;
+        if(!area)return;
+        Object.entries(wsData).forEach(([k,v])=>{
+          if(k==='_area'||typeof v!=='object')return;
+          if(v.tonnage!=null) v.area_output=+(v.tonnage/area*100).toFixed(2);
+          v.area=area;
+        });
+      });
+    }
+
+    const cm=new Set();
+    Object.values(DB.costs).forEach(ws=>Object.keys(ws).forEach(m=>cm.add(parseInt(m))));
+    availableMonths=[...cm].sort((a,b)=>a-b).filter(m=>m>=0&&m<12);
+    curMonthIdx=availableMonths[availableMonths.length-1]||0;
+    const ok=saveData();
+    initMonthSel();
+    document.getElementById('dataSourceLabel').textContent=`已加载 ${availableMonths.length} 个月数据 · ${new Date().toLocaleString('zh-CN')}`;
+    setStatus(`✓ 解析成功 · ${availableMonths.length} 个月份${ok?' · 已保存':''}`,'ok');
+    showTab('overview',document.querySelector('.tab'));
+  }catch(e){setStatus('❌ 解析失败：'+e.message,'err');console.error(e);}
+}
+
+function initMonthSel(){
+  const s=document.getElementById('monthSel');
+  s.innerHTML=availableMonths.map(m=>`<option value="${m}"${m===curMonthIdx?' selected':''}>${m+1}月份</option>`).join('');
+  s.style.display='block';
+}
+
+// ── 工具 ─────────────────────────────────────
+const W=(v,u='',d=1)=>v==null||isNaN(v)?'—':(v.toFixed(Math.abs(v%1)<0.0001?0:d))+u;
+const WY=(v)=>v==null||isNaN(v)?'—':(Math.abs(v)>=10000?W(v/10000,'万'):Math.abs(v)>=1000?W(v/1000,'千'):W(v));
+function getWsCost(sn,mi){
+  const mo=(DB.costs[sn]||{})[mi]||{};
+  const line=(mo['一线本工（承包）']||0)+(mo['一线本工（非承包）']||0);
+  const spread=SPREAD_ITEMS.reduce((s,c)=>s+(mo[c]||0),0);
+  return{line,spread,total:line+spread,items:mo};
+}
+function nodeKey(sn){return sn.replace('数控预处理','数控').replace('结构预制','预制').replace('小件配套','小件').replace('工艺准备','工艺').replace('外膛','外镗');}
+
+// Chart.js 全局暗色主题
+Chart.defaults.color=CHART_DEFAULTS.color;
+Chart.defaults.borderColor=CHART_DEFAULTS.grid;
+Chart.defaults.font.family=CHART_DEFAULTS.font.family;
+Chart.defaults.font.size=11;
+
+// ── 全屏图表弹层 ──────────────────────────────
+function openChartModal(title,chartFn){
+  document.getElementById('modalTitle').textContent=title;
+  document.getElementById('chartModal').classList.remove('hidden');
+  if(modalChart){modalChart.destroy();modalChart=null;}
+  setTimeout(()=>{modalChart=chartFn(document.getElementById('modalCanvas'));},30);
+}
+function closeChartModal(e){
+  if(e&&e.target!==document.getElementById('chartModal'))return;
+  document.getElementById('chartModal').classList.add('hidden');
+  if(modalChart){modalChart.destroy();modalChart=null;}
+}
+
+// ── 图表工厂 ──────────────────────────────────
+function makeTrendChart(canvas){
+  const lc=availableMonths.map(m=>{let s=0;COST_SHEETS.forEach(sn=>s+=getWsCost(sn,m).line);return s/10000;});
+  const sc=availableMonths.map(m=>{let s=0;COST_SHEETS.forEach(sn=>s+=getWsCost(sn,m).spread);return s/10000;});
+  return new Chart(canvas,{type:'bar',data:{labels:availableMonths.map(m=>m+1+'月'),datasets:[
+    {label:'一线工工资',data:lc,backgroundColor:'rgba(239,68,68,.7)',borderRadius:4},
+    {label:'分摊成本',data:sc,backgroundColor:'rgba(59,130,246,.7)',borderRadius:4}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:10,padding:16}}},scales:{x:{stacked:true,grid:{color:'rgba(30,45,74,.8)'}},y:{stacked:true,grid:{color:'rgba(30,45,74,.8)'}}}}});
+}
+function makePieChart(canvas){
+  const mi=curMonthIdx;const it={};
+  SPREAD_ITEMS.forEach(c=>{let s=0;COST_SHEETS.forEach(sn=>s+=((DB.costs[sn]||{})[mi]||{})[c]||0);if(s>0)it[c]=s;});
+  const clr=['#3b82f6','#10b981','#f59e0b','#ef4444','#8b5cf6','#06b6d4','#ec4899','#f97316','#84cc16','#14b8a6','#a78bfa','#fb923c'];
+  return new Chart(canvas,{type:'doughnut',data:{labels:Object.keys(it),datasets:[{data:Object.values(it),backgroundColor:clr,borderWidth:0,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,cutout:'58%',plugins:{legend:{position:'right',labels:{boxWidth:10,padding:12}}}}});
+}
+function makeProfitChart(canvas){
+  const keys=Object.keys(DB.profit).slice(0,8);
+  const datasets=keys.map((k,i)=>({label:k,data:availableMonths.map(m=>(((DB.profit[k]||{})[m]||{})['总利润'])||0),borderColor:COLORS[i%COLORS.length],backgroundColor:'transparent',tension:0.4,pointRadius:3,borderWidth:2}));
+  return new Chart(canvas,{type:'line',data:{labels:availableMonths.map(m=>m+1+'月'),datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:10,padding:12}}},scales:{x:{grid:{color:'rgba(30,45,74,.8)'}},y:{grid:{color:'rgba(30,45,74,.8)'}}}}});
+}
+function makeMachineChart(canvas){
+  const keys=Object.keys(DB.machine).filter(k=>k!=='合计');
+  const datasets=keys.map((k,i)=>({label:k,data:availableMonths.map(m=>((DB.machine[k]||{})[m]||{}).actual||0),borderColor:COLORS[i%COLORS.length],backgroundColor:'transparent',tension:0.4,pointRadius:3,borderWidth:2}));
+  return new Chart(canvas,{type:'line',data:{labels:availableMonths.map(m=>m+1+'月'),datasets},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:10,padding:12}}},scales:{x:{grid:{color:'rgba(30,45,74,.8)'}},y:{grid:{color:'rgba(30,45,74,.8)'}}}}});
+}
+function makeCompareOutputChart(canvas){
+  const mi=curMonthIdx;
+  const sns=COST_SHEETS.filter(s=>!['综合室','本部'].includes(s));
+  const outs=sns.map(sn=>(((DB.profit[sn]||{})[mi]||{})['产值（总）']||0)/10000);
+  const profs=sns.map(sn=>(((DB.profit[sn]||{})[mi]||{})['总利润'])||0);
+  return new Chart(canvas,{type:'bar',data:{labels:sns.map(s=>WS_MAP[s]||s),datasets:[
+    {label:'总产值（万）',data:outs,backgroundColor:'rgba(59,130,246,.7)',borderRadius:4},
+    {label:'利润（万）',data:profs,backgroundColor:'rgba(16,185,129,.7)',borderRadius:4}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:10}}},scales:{x:{ticks:{font:{size:10}},grid:{color:'rgba(30,45,74,.8)'}},y:{grid:{color:'rgba(30,45,74,.8)'}}}}});
+}
+function makeCompareCostChart(canvas){
+  const mi=curMonthIdx;
+  const labels=COST_SHEETS.map(s=>WS_MAP[s]||s);
+  const lines=COST_SHEETS.map(sn=>getWsCost(sn,mi).line/10000);
+  const spreads=COST_SHEETS.map(sn=>getWsCost(sn,mi).spread/10000);
+  return new Chart(canvas,{type:'bar',data:{labels,datasets:[
+    {label:'一线工工资（万）',data:lines,backgroundColor:'rgba(239,68,68,.7)',borderRadius:4},
+    {label:'分摊成本（万）',data:spreads,backgroundColor:'rgba(59,130,246,.7)',borderRadius:4}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:10}}},scales:{x:{stacked:true,ticks:{font:{size:10}},grid:{color:'rgba(30,45,74,.8)'}},y:{stacked:true,grid:{color:'rgba(30,45,74,.8)'}}}}});
+}
+function makeNodeChart(canvas){
+  const mi=curMonthIdx;
+  const entries=Object.entries(DB.nodes).map(([nm,d])=>({nm,r:(d[mi]||{}).node_rate})).filter(x=>x.r&&x.r<2).sort((a,b)=>b.r-a.r);
+  return new Chart(canvas,{type:'bar',data:{labels:entries.map(x=>x.nm),datasets:[{label:'节点完成率',data:entries.map(x=>+(x.r*100).toFixed(1)),backgroundColor:entries.map(x=>x.r>=0.95?'rgba(16,185,129,.8)':x.r>=0.85?'rgba(245,158,11,.8)':'rgba(239,68,68,.8)'),borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',plugins:{legend:{display:false}},scales:{x:{max:100,grid:{color:'rgba(30,45,74,.8)'}},y:{ticks:{font:{size:11}},grid:{color:'rgba(30,45,74,.8)'}}}}});
+}
+function makeWsTrendChart(canvas,sn){
+  const lines=availableMonths.map(m=>getWsCost(sn,m).line/10000);
+  const spreads=availableMonths.map(m=>getWsCost(sn,m).spread/10000);
+  return new Chart(canvas,{type:'bar',data:{labels:availableMonths.map(m=>m+1+'月'),datasets:[
+    {label:'一线工工资',data:lines,backgroundColor:'rgba(239,68,68,.7)',borderRadius:4},
+    {label:'分摊成本',data:spreads,backgroundColor:'rgba(59,130,246,.7)',borderRadius:4}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:8,padding:10}}},scales:{x:{stacked:true,grid:{color:'rgba(30,45,74,.8)'}},y:{stacked:true,grid:{color:'rgba(30,45,74,.8)'}}}}});
+}
+
+// ── 劳动生产率柱状图 ──────────────────────────
+function makeLaborChart(canvas){
+  const mi=curMonthIdx;
+  const entries=Object.entries(DB.labor).map(([nm,d])=>({nm,r:(d[mi]||{}).labor_rate})).filter(x=>x.r>0).sort((a,b)=>b.r-a.r);
+  return new Chart(canvas,{type:'bar',
+    data:{labels:entries.map(x=>x.nm),datasets:[{label:'劳动生产率（万/人）',data:entries.map(x=>x.r),backgroundColor:entries.map((_,i)=>COLORS[i%COLORS.length]),borderRadius:5,borderSkipped:false}]},
+    options:{responsive:true,maintainAspectRatio:false,indexAxis:'y',
+      plugins:{legend:{display:false},datalabels:{display:false}},
+      scales:{x:{grid:{color:'rgba(30,45,74,.8)'},ticks:{font:{size:11}}},y:{grid:{display:false},ticks:{font:{size:11}}}}}
+  });
+}
+
+// ── 综合管理看板 ──────────────────────────────
+function renderDashboard(){
+  const mi=curMonthIdx;
+  // 汇总数据
+  let totOut=0,totCost=0;
+  COST_SHEETS.forEach(sn=>{const{line,spread}=getWsCost(sn,mi);totCost+=line+spread;});
+  Object.values(DB.profit).forEach(wd=>{totOut+=((wd[mi]||{})['产值（总）']||0)/10000;});
+  const totProfit=totOut-(totCost/10000);
+  let nSum=0,nCnt=0;
+  Object.values(DB.nodes).forEach(ws=>{const r=(ws[mi]||{}).node_rate;if(r&&r<2){nSum+=r;nCnt++;}});
+  const avgNode=nCnt?nSum/nCnt:null;
+  // 流机汇总
+  let totQuota=0,totActual=0;
+  Object.entries(DB.machine).forEach(([k,v])=>{if(k==='合计')return;const d=v[mi]||{};totQuota+=(d.quota||0);totActual+=(d.actual||0);});
+  const machSaved=totQuota-totActual;
+  // 劳动生产率均值
+  let lpSum=0,lpCnt=0;
+  Object.values(DB.labor).forEach(ws=>{const r=(ws[mi]||{}).labor_rate;if(r>0){lpSum+=r;lpCnt++;}});
+  const avgLp=lpCnt?lpSum/lpCnt:null;
+
+  let html=`
+  <!-- 核心KPI大卡 -->
+  <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:14px;margin-bottom:20px">
+    <div class="kpi kpi-accent" style="padding:20px 22px">
+      <div class="kpi-label">部门总产值</div>
+      <div class="kpi-val" style="font-size:32px">¥${W(totOut,'万')}</div>
+      <div class="kpi-sub">${mi+1}月实绩</div>
+    </div>
+    <div class="kpi" style="padding:20px 22px;border-color:${totProfit>=0?'rgba(16,185,129,.4)':'rgba(239,68,68,.4)'}">
+      <div class="kpi-label">部门总利润</div>
+      <div class="kpi-val ${totProfit>=0?'up':'down'}" style="font-size:32px">¥${W(totProfit,'万')}</div>
+      <div class="kpi-sub">产值 − 成本</div>
+    </div>
+    <div class="kpi" style="padding:20px 22px">
+      <div class="kpi-label">部门总成本</div>
+      <div class="kpi-val" style="font-size:32px">${WY(totCost)}</div>
+      <div class="kpi-sub">一线工资 + 分摊成本</div>
+    </div>
+  </div>
+
+  <!-- 指标卡片行 -->
+  <div class="kpi-grid" style="margin-bottom:20px">
+    <div class="kpi" style="border-color:${avgNode!=null&&avgNode>=0.95?'rgba(16,185,129,.4)':avgNode!=null&&avgNode>=0.85?'rgba(245,158,11,.4)':'rgba(239,68,68,.4)'}">
+      <div class="kpi-label">平均节点完成率</div>
+      <div class="kpi-val ${avgNode!=null?(avgNode>=0.95?'up':avgNode>=0.85?'':'down'):''}">
+        ${avgNode!=null?W(avgNode*100,'%'):'—'}
+      </div>
+      <div class="kpi-sub">${nCnt}个车间参与统计</div>
+    </div>
+    <div class="kpi" style="border-color:${machSaved>=0?'rgba(16,185,129,.4)':'rgba(239,68,68,.4)'}">
+      <div class="kpi-label">流机管控</div>
+      <div class="kpi-val" style="font-size:14px;margin-top:4px">
+        <span style="color:var(--text2)">定额</span> ${WY(totQuota)}
+        <span style="color:var(--text3);margin:0 4px">/</span>
+        <span style="color:var(--text2)">花费</span> ${WY(totActual)}
+      </div>
+      <div class="kpi-sub ${machSaved>=0?'up':'down'}">${machSaved>=0?'节约':'超支'} ${WY(Math.abs(machSaved))}</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">平均劳动生产率</div>
+      <div class="kpi-val">${avgLp?W(avgLp,'万/人'):'—'}</div>
+      <div class="kpi-sub">各车间均值</div>
+    </div>
+    <div class="kpi">
+      <div class="kpi-label">利润率</div>
+      <div class="kpi-val ${totProfit>=0?'up':'down'}">${totOut>0?W(totProfit/totOut*100,'%'):'—'}</div>
+      <div class="kpi-sub">利润 / 产值</div>
+    </div>
+  </div>
+
+  <!-- 图表区：节点完成率 + 劳动生产率 -->
+  <div class="charts-row" style="margin-bottom:20px">
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>各车间节点完成率（${mi+1}月）</span>
+        <button class="chart-expand" onclick="openChartModal('节点完成率',makeNodeChart)">全屏 ↗</button>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="dashNodeC"></canvas></div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>劳动生产率排名（${mi+1}月）</span>
+        <button class="chart-expand" onclick="openChartModal('劳动生产率',makeLaborChart)">全屏 ↗</button>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="dashLaborC"></canvas></div>
+    </div>
+  </div>
+
+  <!-- 流机明细 + 利润趋势 -->
+  <div class="charts-row" style="margin-bottom:20px">
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>各月产值 & 利润趋势</span>
+        <button class="chart-expand" onclick="openChartModal('产值利润趋势',makeDashTrendChart)">全屏 ↗</button>
+      </div>
+      <div style="position:relative;height:200px"><canvas id="dashTrendC"></canvas></div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>流机定额 vs 实际（${mi+1}月）</span></div>
+      <div style="overflow-y:auto;max-height:200px">`;
+
+  Object.entries(DB.machine).forEach(([nm,data])=>{
+    if(nm==='合计')return;const d=data[mi]||{};if(!d.actual&&!d.quota)return;
+    const saved=d.saved!=null?d.saved:(d.quota||0)-(d.actual||0);const ok=saved>=0;
+    const pct=d.quota>0?Math.min((d.actual/d.quota)*100,150):0;
+    html+=`<div style="margin-bottom:12px">
+      <div style="display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px">
+        <span style="color:var(--text2)">${nm}</span>
+        <span class="${ok?'up':'down'}" style="font-weight:600">${ok?'节约':'超支'} ${WY(Math.abs(saved))}</span>
+      </div>
+      <div style="display:flex;align-items:center;gap:8px">
+        <div style="flex:1;height:6px;background:var(--bg4);border-radius:3px;overflow:hidden">
+          <div style="width:${Math.min(pct,100)}%;height:6px;background:${ok?'var(--green)':'var(--red)'};border-radius:3px"></div>
+        </div>
+        <span style="font-size:10px;color:var(--text3);min-width:80px;text-align:right">${WY(d.actual)} / ${WY(d.quota)}</span>
+      </div>
+    </div>`;
+  });
+  html+=`</div></div></div>
+
+  <!-- 各车间产值利润汇总表 -->
+  <div class="card">
+    <div class="card-title"><span><span class="card-title-dot"></span>各车间综合汇总（${mi+1}月）</span></div>
+    <div style="overflow-x:auto"><table class="tbl">
+    <thead><tr><th>车间</th><th>总产值（万）</th><th>利润（万）</th><th>利润率</th><th>成本合计</th><th>节点完成率</th><th>劳动生产率</th><th>流机状态</th></tr></thead><tbody>`;
+
+  COST_SHEETS.forEach(sn=>{
+    const name=WS_MAP[sn]||sn;
+    const{total}=getWsCost(sn,mi);
+    const pdata=(DB.profit[sn]||{})[mi]||{};
+    const labor=(DB.labor[name]||{})[mi]||{};
+    const nd=(DB.nodes[nodeKey(sn)]||{})[mi]||{};
+    const pr=pdata['总利润'];const totO=(pdata['产值（总）']||0)/10000;
+    const nr=nd.node_rate;
+    const machKey=Object.keys(DB.machine).find(k=>k!=='合计'&&(sn.includes(k.replace('车间',''))||k.includes(sn.replace('车间','').replace('室',''))));
+    const machD=machKey?(DB.machine[machKey][mi]||{}):null;
+    const machOk=machD?((machD.actual||0)<=(machD.quota||0)):null;
+    html+=`<tr>
+      <td>${name}</td>
+      <td>${totO?W(totO,'万'):'—'}</td>
+      <td class="${(pr||0)>=0?'up':'down'}">${pr!=null?W(pr,'万'):'—'}</td>
+      <td>${totO>0&&pr!=null?W(pr/totO*100,'%'):'—'}</td>
+      <td>${WY(total)}</td>
+      <td>${nr&&nr<2?`<span class="pill ${nr>=0.95?'pill-ok':nr>=0.85?'pill-warn':'pill-bad'}">${W(nr*100,'%',0)}</span>`:'—'}</td>
+      <td>${labor.labor_rate?W(labor.labor_rate,'万/人'):'—'}</td>
+      <td>${machOk!=null?`<span class="pill ${machOk?'pill-ok':'pill-bad'}">${machOk?'正常':'超支'}</span>`:'—'}</td>
+    </tr>`;
+  });
+  html+=`</tbody></table></div></div>`;
+  document.getElementById('panel-dashboard').innerHTML=html;
+
+  setTimeout(()=>{
+    const nc=document.getElementById('dashNodeC');if(nc){if(charts.dashNode)charts.dashNode.destroy();charts.dashNode=makeNodeChart(nc);}
+    const lc=document.getElementById('dashLaborC');if(lc){if(charts.dashLabor)charts.dashLabor.destroy();charts.dashLabor=makeLaborChart(lc);}
+    const tc=document.getElementById('dashTrendC');if(tc){if(charts.dashTrend)charts.dashTrend.destroy();charts.dashTrend=makeDashTrendChart(tc);}
+  },30);
+}
+
+function makeDashTrendChart(canvas){
+  const outs=availableMonths.map(m=>{let s=0;Object.values(DB.profit).forEach(wd=>s+=((wd[m]||{})['产值（总）']||0)/10000);return s;});
+  const profs=availableMonths.map(m=>{
+    let totO=0,totC=0;
+    Object.values(DB.profit).forEach(wd=>totO+=((wd[m]||{})['产值（总）']||0)/10000);
+    COST_SHEETS.forEach(sn=>{const{line,spread}=getWsCost(sn,m);totC+=(line+spread)/10000;});
+    return+(totO-totC).toFixed(2);
+  });
+  return new Chart(canvas,{type:'line',data:{labels:availableMonths.map(m=>m+1+'月'),datasets:[
+    {label:'总产值（万）',data:outs,borderColor:'#3b82f6',backgroundColor:'rgba(59,130,246,.1)',tension:0.4,pointRadius:4,borderWidth:2,fill:true},
+    {label:'利润（万）',data:profs,borderColor:'#10b981',backgroundColor:'rgba(16,185,129,.08)',tension:0.4,pointRadius:4,borderWidth:2,fill:true}
+  ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{boxWidth:10,padding:14}}},scales:{x:{grid:{color:'rgba(30,45,74,.8)'}},y:{grid:{color:'rgba(30,45,74,.8)'}}}}});
+}
+function renderOverview(){
+  const mi=curMonthIdx;
+  let totOut=0,totCost=0,totLine=0,totSpread=0;
+  COST_SHEETS.forEach(sn=>{const{line,spread}=getWsCost(sn,mi);totLine+=line;totSpread+=spread;totCost+=line+spread;});
+  Object.values(DB.profit).forEach(wd=>{totOut+=((wd[mi]||{})['产值（总）']||0)/10000;});
+  let nSum=0,nCnt=0;Object.values(DB.nodes).forEach(ws=>{const r=(ws[mi]||{}).node_rate;if(r&&r<2){nSum+=r;nCnt++;}});
+  const avgNode=nCnt?nSum/nCnt:null;
+  let hcSum=0;Object.values(DB.labor).forEach(ws=>{hcSum+=((ws[mi]||{}).headcount||0);});
+
+  let html=`
+  <div class="kpi-grid">
+    <div class="kpi kpi-accent"><div class="kpi-label">部门总产值</div><div class="kpi-val">¥${W(totOut,'万')}</div></div>
+    <div class="kpi"><div class="kpi-label">部门总成本</div><div class="kpi-val">${WY(totCost)}</div></div>
+    <div class="kpi"><div class="kpi-label">一线工工资</div><div class="kpi-val">${WY(totLine)}</div></div>
+    <div class="kpi"><div class="kpi-label">分摊成本</div><div class="kpi-val">${WY(totSpread)}</div></div>
+  </div>
+  <div class="kpi-grid">
+    <div class="kpi"><div class="kpi-label">平均节点完成率</div><div class="kpi-val">${avgNode!=null?W(avgNode*100,'%'):'—'}</div></div>
+    <div class="kpi"><div class="kpi-label">总人数</div><div class="kpi-val">${hcSum||'—'}${hcSum?'人':''}</div></div>
+    <div class="kpi"><div class="kpi-label">数据月份</div><div class="kpi-val">${mi+1} 月</div></div>
+    <div class="kpi"><div class="kpi-label">核算单元</div><div class="kpi-val">${COST_SHEETS.filter(s=>DB.costs[s]).length} 个</div></div>
+  </div>
+  <div class="charts-row">
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>各月成本趋势</span>
+        <button class="chart-expand" onclick="openChartModal('各月成本趋势',makeTrendChart)">全屏 ↗</button>
+      </div>
+      <div style="position:relative;height:150px"><canvas id="trendC"></canvas></div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>本月分摊成本构成</span>
+        <button class="chart-expand" onclick="openChartModal('本月分摊成本构成',makePieChart)">全屏 ↗</button>
+      </div>
+      <div style="position:relative;height:150px"><canvas id="pieC"></canvas></div>
+    </div>
+  </div>
+  <div style="height:14px"></div>
+  <div class="section-label">各核算单元 · 点击查看详情</div>
+  <div class="ws-grid">`;
+
+  COST_SHEETS.forEach(sn=>{
+    const{line,spread,total}=getWsCost(sn,mi);
+    const pdata=(DB.profit[sn]||{})[mi]||{};
+    const labor=(DB.labor[WS_MAP[sn]]||{})[mi]||{};
+    const nd=(DB.nodes[nodeKey(sn)]||{})[mi]||{};
+    const nr=nd.node_rate;
+    const isCO=['综合室','本部','检验室'].includes(sn);
+    html+=`<div class="ws-card ${isCO?'cost-only':'prod'}" onclick="openWsModal('${sn}')">
+      <div class="ws-name">${WS_MAP[sn]||sn}
+        <span style="display:flex;align-items:center;gap:5px">
+          ${nr&&nr<2?`<span class="pill ${nr>=0.95?'pill-ok':nr>=0.85?'pill-warn':'pill-bad'}">${W(nr*100,'%',0)}</span>`:''}
+          <span style="font-size:9px;color:var(--text3)">详情 →</span>
+        </span>
+      </div>
+      <div class="ws-metrics">
+        <div><div class="ws-m-label">一线工工资</div><div class="ws-m-val">${WY(line)}</div></div>
+        <div><div class="ws-m-label">分摊成本</div><div class="ws-m-val">${WY(spread)}</div></div>
+        <div><div class="ws-m-label">成本合计</div><div class="ws-m-val">${WY(total)}</div></div>
+        ${pdata['产值（总）']?`<div><div class="ws-m-label">总产值</div><div class="ws-m-val">${W(pdata['产值（总）']/10000,'万')}</div></div>`:''}
+        ${pdata['总利润']!=null?`<div><div class="ws-m-label">利润</div><div class="ws-m-val ${pdata['总利润']>=0?'up':'down'}">${W(pdata['总利润'],'万')}</div></div>`:''}
+        ${labor.headcount?`<div><div class="ws-m-label">人数</div><div class="ws-m-val">${labor.headcount}人</div></div>`:''}
+      </div>
+    </div>`;
+  });
+  html+=`</div>`;
+  document.getElementById('panel-overview').innerHTML=html;
+  setTimeout(()=>{
+    if(charts.trend)charts.trend.destroy();charts.trend=makeTrendChart(document.getElementById('trendC'));
+    if(charts.pie)charts.pie.destroy();charts.pie=makePieChart(document.getElementById('pieC'));
+  },30);
+}
+
+// ── 车间详情弹层 ──────────────────────────────
+function openWsModal(sn){
+  const mi=curMonthIdx;
+  const name=WS_MAP[sn]||sn;
+  const{line,spread,total,items}=getWsCost(sn,mi);
+  const pdata=(DB.profit[sn]||{})[mi]||{};
+  const labor=(DB.labor[name]||{})[mi]||{};
+  const nd=(DB.nodes[nodeKey(sn)]||{})[mi]||{};
+  const machKey=Object.keys(DB.machine).find(k=>k!=='合计'&&(sn.includes(k)||k.includes(sn.replace('车间','').replace('室',''))));
+  const machData=machKey?(DB.machine[machKey][mi]||{}):null;
+
+  document.getElementById('wsModalTitle').textContent=`${name} · ${mi+1}月`;
+  let body=`<div class="kpi-grid">
+    <div class="kpi kpi-accent"><div class="kpi-label">总产值</div><div class="kpi-val">${pdata['产值（总）']?W(pdata['产值（总）']/10000,'万'):'—'}</div></div>
+    <div class="kpi"><div class="kpi-label">利润</div><div class="kpi-val ${(pdata['总利润']||0)>=0?'up':'down'}">${pdata['总利润']!=null?W(pdata['总利润'],'万'):'—'}</div></div>
+    <div class="kpi"><div class="kpi-label">成本合计</div><div class="kpi-val">${WY(total)}</div></div>
+    <div class="kpi"><div class="kpi-label">人数</div><div class="kpi-val">${labor.headcount||'—'}${labor.headcount?'人':''}</div></div>
+  </div>`;
+
+  if(pdata['产值（总）']){
+    body+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>产值构成</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div class="kpi"><div class="kpi-label">一线工产值</div><div class="kpi-val" style="font-size:16px">${WY(pdata['一线本工产值']||0)}</div></div>
+      <div class="kpi"><div class="kpi-label">人工产值</div><div class="kpi-val" style="font-size:16px">${WY(pdata['人工产值']||0)}</div></div>
+      <div class="kpi"><div class="kpi-label">分摊产值</div><div class="kpi-val" style="font-size:16px">${WY(pdata['分摊产值']||0)}</div></div>
+    </div></div>`;
+  }
+
+  if(pdata['总利润']!=null){
+    const lp=pdata['一线本工利润']||0;const sp=pdata['分摊利润']||0;
+    body+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>利润拆分</span></div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">
+      <div class="kpi"><div class="kpi-label">一线工利润</div><div class="kpi-val ${lp>=0?'up':'down'}" style="font-size:16px">${W(lp,'万')}</div></div>
+      <div class="kpi"><div class="kpi-label">分摊利润</div><div class="kpi-val ${sp>=0?'up':'down'}" style="font-size:16px">${W(sp,'万')}</div></div>
+    </div></div>`;
+  }
+
+  body+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>成本明细</span></div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px">`;
+  COST_ITEMS.forEach(c=>{const v=items[c]||0;if(!v)return;body+=`<div class="kpi"><div class="kpi-label">${c}</div><div class="ws-m-val" style="font-size:13px;margin-top:4px">${WY(v)}</div></div>`;});
+  body+=`</div></div>`;
+
+  const effRows=[];
+  if(nd.node_rate&&nd.node_rate<2)effRows.push(['节点完成率',W(nd.node_rate*100,'%')]);
+  if(labor.labor_rate)effRows.push(['劳动生产率',W(labor.labor_rate,'万/人')]);
+  if(effRows.length){
+    body+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>效率指标</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+    ${effRows.map(([l,v])=>`<div class="kpi"><div class="kpi-label">${l}</div><div class="kpi-val" style="font-size:16px">${v}</div></div>`).join('')}
+    </div></div>`;
+  }
+
+  if(machData&&(machData.actual||machData.quota)){
+    const saved=(machData.quota||0)-(machData.actual||0);const ok=saved>=0;
+    body+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>流机管控</span></div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px">
+      <div class="kpi"><div class="kpi-label">当月定额</div><div class="kpi-val" style="font-size:16px">${WY(machData.quota||0)}</div></div>
+      <div class="kpi"><div class="kpi-label">实际花费</div><div class="kpi-val" style="font-size:16px">${WY(machData.actual||0)}</div></div>
+      <div class="kpi"><div class="kpi-label">节约/超支</div><div class="kpi-val ${ok?'up':'down'}" style="font-size:16px">${ok?'+':'-'}${WY(Math.abs(saved))}</div></div>
+    </div></div>`;
+  }
+
+  body+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>各月成本趋势</span>
+    <button class="chart-expand" onclick="openChartModal('${name} · 成本趋势',function(c){return makeWsTrendChart(c,'${sn}')})">全屏 ↗</button>
+  </div><div style="position:relative;height:160px"><canvas id="wsTrendC"></canvas></div></div>`;
+
+  document.getElementById('wsModalBody').innerHTML=body;
+  document.getElementById('wsModal').classList.remove('hidden');
+  setTimeout(()=>{const c=document.getElementById('wsTrendC');if(c)makeWsTrendChart(c,sn);},30);
+}
+function closeWsModal(e){if(e&&e.target!==document.getElementById('wsModal'))return;document.getElementById('wsModal').classList.add('hidden');}
+
+// ── 各车间看板 ────────────────────────────────
+function renderWorkshop(){
+  const mi=curMonthIdx;let html='';
+  COST_SHEETS.forEach(sn=>{
+    const name=WS_MAP[sn]||sn;
+    const{line,spread,total}=getWsCost(sn,mi);
+    const pdata=(DB.profit[sn]||{})[mi]||{};
+    const labor=(DB.labor[name]||{})[mi]||{};
+    const nd=(DB.nodes[nodeKey(sn)]||{})[mi]||{};
+    const nr=nd.node_rate;const pr=pdata['总利润'];
+    html+=`<div class="card">
+      <div class="card-title" style="font-size:13px;font-weight:700;color:var(--text1);text-transform:none;letter-spacing:0">
+        <span style="display:flex;align-items:center;gap:8px"><span class="card-title-dot"></span>${name}</span>
+        ${nr&&nr<2?`<span class="pill ${nr>=0.95?'pill-ok':nr>=0.85?'pill-warn':'pill-bad'}">节点 ${W(nr*100,'%',0)}</span>`:''}
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;margin-bottom:14px">
+        <div class="kpi kpi-accent"><div class="kpi-label">总产值</div><div class="kpi-val" style="font-size:16px">${pdata['产值（总）']?W(pdata['产值（总）']/10000,'万'):'—'}</div></div>
+        <div class="kpi"><div class="kpi-label">利润</div><div class="kpi-val ${(pr||0)>=0?'up':'down'}" style="font-size:16px">${pr!=null?W(pr,'万'):'—'}</div></div>
+        <div class="kpi"><div class="kpi-label">成本合计</div><div class="kpi-val" style="font-size:16px">${WY(total)}</div></div>
+        <div class="kpi"><div class="kpi-label">人数</div><div class="kpi-val" style="font-size:16px">${labor.headcount||'—'}${labor.headcount?'人':''}</div></div>
+        <div class="kpi"><div class="kpi-label">劳动生产率</div><div class="kpi-val" style="font-size:16px">${labor.labor_rate?W(labor.labor_rate,'万/人'):'—'}</div></div>
+      </div>
+      <div style="display:grid;grid-template-columns:minmax(0,1.4fr) minmax(0,1fr);gap:12px">
+        <div>
+          <div class="section-label" style="margin-bottom:8px">分摊成本明细</div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:6px">
+            ${SPREAD_ITEMS.map(c=>{const v=(getWsCost(sn,mi).items[c])||0;return v?`<div><div class="ws-m-label">${c}</div><div class="ws-m-val">${WY(v)}</div></div>`:''}).join('')}
+          </div>
+        </div>
+        <div>
+          <div class="section-label" style="margin-bottom:8px">各月成本趋势
+            <button class="chart-expand" onclick="openChartModal('${name} · 成本趋势',function(c){return makeWsTrendChart(c,'${sn}')})">全屏 ↗</button>
+          </div>
+          <div style="position:relative;height:110px"><canvas id="wsc_${sn}"></canvas></div>
+        </div>
+      </div>
+    </div>`;
+  });
+  document.getElementById('panel-workshop').innerHTML=html;
+  setTimeout(()=>{COST_SHEETS.forEach(sn=>{const c=document.getElementById('wsc_'+sn);if(c)makeWsTrendChart(c,sn);});},30);
+}
+
+// ── 车间对比 ──────────────────────────────────
+function renderCompare(){
+  const mi=curMonthIdx;
+  let html=`
+  <div class="charts-row">
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>产值 & 利润对比</span>
+        <button class="chart-expand" onclick="openChartModal('产值 & 利润对比',makeCompareOutputChart)">全屏 ↗</button>
+      </div>
+      <div style="position:relative;height:180px"><canvas id="cmpOut"></canvas></div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>成本结构对比</span>
+        <button class="chart-expand" onclick="openChartModal('成本结构对比',makeCompareCostChart)">全屏 ↗</button>
+      </div>
+      <div style="position:relative;height:180px"><canvas id="cmpCost"></canvas></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span><span class="card-title-dot"></span>节点完成率排名</span>
+      <button class="chart-expand" onclick="openChartModal('节点完成率排名',makeNodeChart)">全屏 ↗</button>
+    </div>
+    <div style="position:relative;height:200px"><canvas id="cmpNode"></canvas></div>
+  </div>
+  <div class="card">
+    <div class="card-title"><span><span class="card-title-dot"></span>各车间横向汇总（${mi+1}月）</span></div>
+    <div style="overflow-x:auto"><table class="tbl">
+    <thead><tr><th>车间</th><th>总产值（万）</th><th>一线工产值</th><th>分摊产值</th><th>一线工工资</th><th>分摊成本</th><th>利润（万）</th><th>人数</th><th>人均产值</th><th>节点完成率</th></tr></thead><tbody>`;
+
+  COST_SHEETS.forEach(sn=>{
+    const name=WS_MAP[sn]||sn;
+    const{line,spread}=getWsCost(sn,mi);
+    const pdata=(DB.profit[sn]||{})[mi]||{};
+    const labor=(DB.labor[name]||{})[mi]||{};
+    const nd=(DB.nodes[nodeKey(sn)]||{})[mi]||{};
+    const pr=pdata['总利润'];const hc=labor.headcount||0;
+    const totOut=(pdata['产值（总）']||0)/10000;
+    html+=`<tr>
+      <td>${name}</td><td>${totOut?W(totOut,'万'):'—'}</td>
+      <td>${pdata['一线本工产值']?WY(pdata['一线本工产值']):'—'}</td>
+      <td>${pdata['分摊产值']?WY(pdata['分摊产值']):'—'}</td>
+      <td>${WY(line)}</td><td>${WY(spread)}</td>
+      <td class="${(pr||0)>=0?'up':'down'}">${pr!=null?W(pr,'万'):'—'}</td>
+      <td>${hc||'—'}</td>
+      <td>${hc>0?W(totOut/hc,'万/人'):'—'}</td>
+      <td>${nd.node_rate&&nd.node_rate<2?W(nd.node_rate*100,'%',1):'—'}</td>
+    </tr>`;
+  });
+  html+=`</tbody></table></div></div>`;
+  document.getElementById('panel-compare').innerHTML=html;
+  setTimeout(()=>{
+    if(charts.cmpOut)charts.cmpOut.destroy();charts.cmpOut=makeCompareOutputChart(document.getElementById('cmpOut'));
+    if(charts.cmpCost)charts.cmpCost.destroy();charts.cmpCost=makeCompareCostChart(document.getElementById('cmpCost'));
+    if(charts.cmpNode)charts.cmpNode.destroy();charts.cmpNode=makeNodeChart(document.getElementById('cmpNode'));
+  },30);
+}
+
+// ── 成本明细 ──────────────────────────────────
+function renderCost(){
+  const mi=curMonthIdx;
+  // 按车间展示，每行可展开看12项明细
+  let html=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>分摊成本汇总（${mi+1}月）· 点击行查看明细</span></div>
+  <table class="tbl" id="costSummaryTbl">
+    <thead><tr><th>核算单元</th><th>一线工工资</th><th>分摊成本</th><th>成本合计</th><th></th></tr></thead>
+    <tbody>`;
+
+  COST_SHEETS.forEach((sn,idx)=>{
+    const{line,spread,total,items}=getWsCost(sn,mi);
+    html+=`<tr style="cursor:pointer" onclick="toggleCostDetail('detail_${idx}',this)">
+      <td><span style="color:var(--accent2);margin-right:6px" id="arr_${idx}">▶</span>${WS_MAP[sn]||sn}</td>
+      <td>${WY(line)}</td>
+      <td>${WY(spread)}</td>
+      <td style="font-weight:700;color:var(--text1)">${WY(total)}</td>
+      <td style="font-size:10px;color:var(--text3)">展开明细</td>
+    </tr>
+    <tr id="detail_${idx}" style="display:none">
+      <td colspan="5" style="padding:0">
+        <div style="background:var(--bg4);border-radius:8px;margin:4px 8px 8px;padding:12px 16px">
+          <div style="display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px">
+            ${SPREAD_ITEMS.map(c=>{const v=items[c]||0;return `<div style="padding:6px 0;border-bottom:1px solid var(--border)">
+              <div style="font-size:10px;color:var(--text3);margin-bottom:3px">${c}</div>
+              <div style="font-size:12px;font-weight:600;color:${v>0?'var(--text1)':'var(--text3)'}">${v>0?WY(v):'—'}</div>
+            </div>`;}).join('')}
+          </div>
+        </div>
+      </td>
+    </tr>`;
+  });
+
+  // 合计行
+  const totLine=COST_SHEETS.reduce((s,sn)=>s+getWsCost(sn,mi).line,0);
+  const totSpread=COST_SHEETS.reduce((s,sn)=>s+getWsCost(sn,mi).spread,0);
+  const totAll=totLine+totSpread;
+  html+=`<tr class="tot"><td>合计</td><td>${WY(totLine)}</td><td>${WY(totSpread)}</td><td>${WY(totAll)}</td><td></td></tr>`;
+  html+=`</tbody></table></div>`;
+
+  // 分摊成本各项汇总横表
+  html+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>分摊成本各项汇总（${mi+1}月）</span></div>
+  <div style="overflow-x:auto"><table class="tbl">
+  <thead><tr><th>单元</th>${SPREAD_ITEMS.map(c=>`<th>${c}</th>`).join('')}<th>合计</th></tr></thead><tbody>`;
+  COST_SHEETS.forEach(sn=>{
+    const mo=(DB.costs[sn]||{})[mi]||{};
+    const tot=SPREAD_ITEMS.reduce((s,c)=>s+(mo[c]||0),0);
+    html+=`<tr><td>${WS_MAP[sn]||sn}</td>${SPREAD_ITEMS.map(c=>`<td>${mo[c]?WY(mo[c]):''}</td>`).join('')}<td style="font-weight:700;color:var(--text1)">${WY(tot)}</td></tr>`;
+  });
+  const tots=SPREAD_ITEMS.map(c=>{let s=0;COST_SHEETS.forEach(sn=>s+=((DB.costs[sn]||{})[mi]||{})[c]||0);return s;});
+  html+=`<tr class="tot"><td>合计</td>${tots.map(v=>`<td>${WY(v)}</td>`).join('')}<td>${WY(tots.reduce((a,b)=>a+b,0))}</td></tr>`;
+  html+=`</tbody></table></div></div>`;
+  document.getElementById('panel-cost').innerHTML=html;
+}
+
+function toggleCostDetail(id,row){
+  const el=document.getElementById(id);
+  const idx=id.replace('detail_','');
+  const arr=document.getElementById('arr_'+idx);
+  if(el.style.display==='none'){el.style.display='';if(arr)arr.textContent='▼';}
+  else{el.style.display='none';if(arr)arr.textContent='▶';}
+}
+
+// ── 利润分析 ──────────────────────────────────
+function renderProfit(){
+  const mi=curMonthIdx;
+  let html=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>利润分析（${mi+1}月）</span></div>
+  <div style="overflow-x:auto"><table class="tbl">
+  <thead><tr><th>单元</th><th>总产值</th><th>一线工产值</th><th>分摊产值</th><th>一线工成本</th><th>分摊成本</th><th>总利润（万）</th></tr></thead><tbody>`;
+  Object.entries(DB.profit).forEach(([nm,wd])=>{
+    const p=wd[mi]||{};const pr=p['总利润']||0;
+    html+=`<tr><td>${nm}</td><td>${p['产值（总）']?WY(p['产值（总）']):''}</td><td>${p['一线本工产值']?WY(p['一线本工产值']):''}</td><td>${p['分摊产值']?WY(p['分摊产值']):''}</td><td>${p['一线本工成本']?WY(p['一线本工成本']):''}</td><td>${p['分摊成本']?WY(p['分摊成本']):''}</td><td class="${pr>=0?'up':'down'}">${pr?W(pr,'万'):''}</td></tr>`;
+  });
+  html+=`</tbody></table></div></div>`;
+  html+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>各月利润趋势</span>
+    <button class="chart-expand" onclick="openChartModal('各月利润趋势',makeProfitChart)">全屏 ↗</button>
+  </div><div style="position:relative;height:200px"><canvas id="profitC"></canvas></div></div>`;
+  document.getElementById('panel-profit').innerHTML=html;
+  setTimeout(()=>{if(charts.profit)charts.profit.destroy();charts.profit=makeProfitChart(document.getElementById('profitC'));},30);
+}
+
+// ── 效率指标 ──────────────────────────────────
+function renderEfficiency(){
+  const mi=curMonthIdx;
+  // 劳动生产率柱状图 + 人数表
+  let html=`
+  <div class="charts-row" style="margin-bottom:14px">
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>劳动生产率排名（${mi+1}月）</span>
+        <button class="chart-expand" onclick="openChartModal('劳动生产率',makeLaborChart)">全屏 ↗</button>
+      </div>
+      <div style="position:relative;height:220px"><canvas id="laborC"></canvas></div>
+    </div>
+    <div class="card" style="margin:0">
+      <div class="card-title"><span><span class="card-title-dot"></span>人数 & 劳动生产率明细</span></div>
+      <table class="tbl">
+        <thead><tr><th>车间</th><th>人数（人）</th><th>劳动生产率（万/人）</th></tr></thead>
+        <tbody>`;
+  Object.entries(DB.labor).forEach(([nm,data])=>{
+    const d=data[mi]||{};if(!d.headcount&&!d.labor_rate)return;
+    html+=`<tr><td>${nm}</td><td>${d.headcount||'—'}</td><td>${d.labor_rate?W(d.labor_rate,'万/人'):''}</td></tr>`;
+  });
+  html+=`</tbody></table></div></div>`;
+
+  // 节点完成率
+  html+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>关键节点完成率（${mi+1}月）</span>
+    <button class="chart-expand" onclick="openChartModal('关键节点完成率',makeNodeChart)">全屏 ↗</button>
+  </div>`;
+  const nodeEntries=Object.entries(DB.nodes).map(([nm,d])=>({nm,r:(d[mi]||{}).node_rate,total:(d[mi]||{}).total_nodes})).filter(x=>x.r&&x.r<2).sort((a,b)=>b.r-a.r);
+  if(nodeEntries.length){
+    nodeEntries.forEach(({nm,r,total})=>{
+      const p=r*100;
+      html+=`<div style="display:flex;align-items:center;gap:12px;margin-bottom:12px">
+        <span style="font-size:12px;min-width:80px;color:var(--text2)">${nm}</span>
+        ${total?`<span style="font-size:10px;color:var(--text3);min-width:52px">共${total}个节点</span>`:''}
+        <div class="bar-bg" style="flex:1"><div class="bar-fill" style="width:${Math.min(p,100)}%;background:${p>=95?'var(--green)':p>=85?'var(--amber)':'var(--red)'}"></div></div>
+        <span style="font-size:13px;font-weight:700;min-width:48px;text-align:right;color:${p>=95?'var(--green)':p>=85?'var(--amber)':'var(--red)'}">${W(p,'%',1)}</span>
+      </div>`;
+    });
+  } else {html+='<div style="color:var(--text3);font-size:12px;padding:8px 0">暂无节点数据</div>';}
+  html+=`</div>`;
+
+  // 单位面积产量（从车间利用率sheet解析）
+  const utilEntries=Object.entries(DB.utilization).map(([nm,wsData])=>{
+    const d=wsData[mi]||{};
+    return{nm,area:wsData._area,tonnage:d.tonnage,area_output:d.area_output,util_rate:d.util_rate};
+  }).filter(x=>x.area||x.area_output||x.tonnage);
+
+  if(utilEntries.length){
+    html+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>单位面积产量（${mi+1}月）</span></div>
+    <table class="tbl">
+      <thead><tr><th>车间</th><th>面积（m²）</th><th>月吨位</th><th>单位面积产量（吨/100m²）</th><th>利用率</th></tr></thead>
+      <tbody>`;
+    utilEntries.forEach(({nm,area,tonnage,area_output,util_rate})=>{
+      html+=`<tr>
+        <td>${nm}</td>
+        <td>${area||'—'}</td>
+        <td>${tonnage!=null?W(tonnage,'吨'):'—'}</td>
+        <td style="font-weight:600;color:var(--accent2)">${area_output!=null?W(area_output):'—'}</td>
+        <td>${util_rate!=null?W(util_rate,'%'):'—'}</td>
+      </tr>`;
+    });
+    html+=`</tbody></table></div>`;
+  }
+
+  document.getElementById('panel-efficiency').innerHTML=html;
+  setTimeout(()=>{
+    const lc=document.getElementById('laborC');
+    if(lc){if(charts.labor)charts.labor.destroy();charts.labor=makeLaborChart(lc);}
+  },30);
+}
+
+// ── 流机管控 ──────────────────────────────────
+function renderMachine(){
+  const mi=curMonthIdx;
+  let html=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>流机定额 vs 实际（${mi+1}月）</span></div>
+  <div style="overflow-x:auto"><table class="tbl">
+  <thead><tr><th>车间</th><th>定额（元）</th><th>实际花费（元）</th><th>节约/超支</th><th>状态</th></tr></thead><tbody>`;
+  Object.entries(DB.machine).forEach(([nm,data])=>{
+    if(nm==='合计')return;const d=data[mi]||{};if(!d.actual&&!d.quota)return;
+    const saved=d.saved!=null?d.saved:(d.quota||0)-(d.actual||0);const ok=saved>=0;
+    html+=`<tr><td>${nm}</td><td>${WY(d.quota||0)}</td><td>${WY(d.actual||0)}</td><td class="${ok?'up':'down'}">${ok?'+':'-'} ${WY(Math.abs(saved))}</td><td><span class="pill ${ok?'pill-ok':'pill-bad'}">${ok?'✓ 未超定额':'⚠ 超出定额'}</span></td></tr>`;
+  });
+  html+=`</tbody></table></div></div>`;
+  html+=`<div class="card"><div class="card-title"><span><span class="card-title-dot"></span>各月流机花费趋势</span>
+    <button class="chart-expand" onclick="openChartModal('各月流机花费趋势',makeMachineChart)">全屏 ↗</button>
+  </div><div style="position:relative;height:200px"><canvas id="machineC"></canvas></div></div>`;
+  document.getElementById('panel-machine').innerHTML=html;
+  setTimeout(()=>{if(charts.machine)charts.machine.destroy();charts.machine=makeMachineChart(document.getElementById('machineC'));},30);
+}
+
+// ── 路由 ─────────────────────────────────────
+function showTab(name,btn){
+  document.querySelectorAll('.panel').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById('panel-'+name).classList.add('active');
+  btn.classList.add('active');
+  const r={dashboard:renderDashboard,overview:renderOverview,workshop:renderWorkshop,compare:renderCompare,cost:renderCost,profit:renderProfit,efficiency:renderEfficiency,machine:renderMachine};
+  if(r[name])r[name]();
+}
+function onMonthChange(){
+  curMonthIdx=parseInt(document.getElementById('monthSel').value);
+  document.querySelector('.tab.active').click();
+}
+document.addEventListener('keydown',e=>{if(e.key==='Escape'){closeChartModal();closeWsModal();}});
+</script>
+</body>
+</html>
